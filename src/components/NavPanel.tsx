@@ -13,11 +13,16 @@ export const NavPavel = () => {
         ООО ВЕКТОР РАЗВИТИЯ+
       </p>
       <div
-        className="mt-[48px] ml-[47px] flex gap-[16px] items-center cursor-pointer"
+        className="h-[72px] mt-[48px] pl-[47px] flex gap-[16px] items-center cursor-pointer relative"
         onClick={() => {
           navigate("/admin");
         }}
       >
+        <div
+          className={`absolute left-0 h-[72px] w-[4px] rounded-r-[16px] bg-[#009EEB] ${
+            pathname !== "/admin" ? "hidden" : ""
+          }`}
+        ></div>
         <TestIcons color={pathname === "/admin" ? "#009EEB" : "#648AA8"} />
         <p
           className={`font-onest font-medium text-[20px]/[25.5px] ${
@@ -28,11 +33,16 @@ export const NavPavel = () => {
         </p>
       </div>
       <div
-        className="mt-[48px] ml-[47px] flex gap-[16px] items-center cursor-pointer"
+        className="h-[72px] pl-[47px] flex gap-[16px] items-center cursor-pointer relative"
         onClick={() => {
           navigate("/admin/employees");
         }}
       >
+        <div
+          className={`absolute left-0 h-[72px] w-[4px] rounded-r-[16px] bg-[#009EEB] ${
+            pathname !== "/admin/employees" ? "hidden" : ""
+          }`}
+        ></div>
         <EmployersIcon
           color={pathname === "/admin/employees" ? "#009EEB" : "#648AA8"}
         />

@@ -8,12 +8,12 @@ export const NavPavel = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className="h-full bg-white w-[280px] flex flex-col py-[70px]">
+    <nav className="h-full bg-white w-[327px] flex flex-col py-[80px]">
       <p className="font-onest font-bold text-black text-[16px]/[20.4px] mx-auto">
         ООО ВЕКТОР РАЗВИТИЯ+
       </p>
       <div
-        className="h-[72px] mt-[48px] pl-[47px] flex gap-[16px] items-center cursor-pointer relative"
+        className="h-[72px] mt-[48px] pl-[35px] flex gap-[16px] items-center cursor-pointer relative"
         onClick={() => {
           navigate("/admin");
         }}

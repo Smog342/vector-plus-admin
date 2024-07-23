@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { SchoolType } from "../types";
+import { EyeIcon } from "../icons/EyeIcon";
+import { DeleteIcon } from "../icons/DeleteIcon";
 
 export const TestsTable = () => {
   const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
@@ -36,8 +38,8 @@ export const TestsTable = () => {
         <div>
           <table className="w-full h-full">
             <tr className="h-[52px] bg-[#EFF3F6]">
-              <th className="rounded-l-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
-                Название текста
+              <th className="rounded-l-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8] text-left pl-[5%]">
+                Название теста
               </th>
               <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
                 Целевая аудитория
@@ -50,13 +52,27 @@ export const TestsTable = () => {
               </th>
             </tr>
             <tr className="border-b border-[#EFF3F6]">
-              <td className="text-center py-[32px] w-[25%]">Тест 1</td>
+              <td className="py-[32px] text-left pl-[5%] w-[25%]">
+                Геологические признаки вулканической активности и их специфика в
+                применении в условиях Камчатского края
+              </td>
               <td className="text-center py-[32px] w-[25%]">1-4 класс</td>
               <td className="text-center py-[32px] w-[25%]">20</td>
               <td className="text-center py-[32px] w-[25%]">
-                <p>
-                  100 - Отлично, ты боольшой молодец! Старайся и дальше так
-                  делать, и у тебя всё получится!
+                {/* <div className="flex items-center justify-end w-full">
+                  <p className="mr-[16%]">
+                    100 - Отлично, ты боольшой молодец! Старайся и дальше так
+                    делать, и у тебя всё получится!
+                    100 - отлично
+                  </p>
+                  <EyeIcon visible />
+                  <DeleteIcon visible />
+                </div> */}
+                <p className="relative">
+                  100 - отлично
+                  <div className="absolute right-0 top-[50%] bottom-[50%]">
+                    <EyeIcon visible />
+                  </div>
                 </p>
               </td>
             </tr>

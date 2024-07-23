@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { NavPavel } from "./NavPanel";
 import { Header } from "./Header";
+import { TestsTable } from "./TestsTable";
 
 export const AdminPanel = () => {
   const { pathname } = useLocation();
@@ -13,6 +14,7 @@ export const AdminPanel = () => {
           {pathname === "/admin" ? (
             <>
               <Header />
+              <TestsTable />
             </>
           ) : (
             <></>

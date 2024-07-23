@@ -4,3 +4,5 @@ export type ButtonProps = {
   onClick: Function;
   submit: boolean;
 };
+
+export type SchoolType = "SCHOOL" | "PRESCHOOL";

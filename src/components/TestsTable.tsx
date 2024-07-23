@@ -33,6 +33,77 @@ export const TestsTable = () => {
             Дошкольник
           </div>
         </div>
+        <div>
+          <table className="w-full h-full">
+            <tr className="h-[52px] bg-[#EFF3F6]">
+              <th className="rounded-l-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
+                Название текста
+              </th>
+              <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
+                Целевая аудитория
+              </th>
+              <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
+                Количество вопросов
+              </th>
+              <th className="rounded-r-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
+                Количество баллов
+              </th>
+            </tr>
+            <tr className="border-b border-[#EFF3F6]">
+              <td className="text-center py-[32px] w-[25%]">Тест 1</td>
+              <td className="text-center py-[32px] w-[25%]">1-4 класс</td>
+              <td className="text-center py-[32px] w-[25%]">20</td>
+              <td className="text-center py-[32px] w-[25%]">
+                <p>
+                  100 - Отлично, ты боольшой молодец! Старайся и дальше так
+                  делать, и у тебя всё получится!
+                </p>
+              </td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+            <tr className="">
+              <td className="text-center py-[32px]">Тест 1</td>
+              <td className="text-center py-[32px]">1-4 класс</td>
+              <td className="text-center py-[32px]">20</td>
+              <td className="text-center py-[32px]">100 - Отлично</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </>
   );

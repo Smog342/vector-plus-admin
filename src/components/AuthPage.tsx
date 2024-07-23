@@ -6,7 +6,7 @@ export const AuthPage = () => {
 
   return (
     <>
-      <div className="flex w-screen h-screen bg-gray-100">
+      <div className="flex min-w-screen min-h-screen bg-gray-100">
         <div className="bg-white w-[544px] h-[468px] rounded-[24px] mx-auto my-auto p-[32px] border-[1px] border-[#DEE5EA]">
           <form
             onSubmit={(e) => {

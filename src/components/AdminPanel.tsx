@@ -8,9 +8,9 @@ export const AdminPanel = () => {
 
   return (
     <>
-      <div className="flex w-screen h-screen bg-gray-100">
+      <div className="flex min-h-screen bg-gray-100">
         <NavPavel />
-        <div className="w-full pt-[70px] px-[64px] flex flex-col gap-[32px]">
+        <div className="w-full h-full pt-[70px] pl-[344px] pr-[64px] flex flex-col gap-[32px]">
           {pathname === "/admin" ? (
             <>
               <Header />

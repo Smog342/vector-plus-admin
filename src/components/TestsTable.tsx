@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SchoolType } from "../types";
 import { EyeIcon } from "../icons/EyeIcon";
 import { DeleteIcon } from "../icons/DeleteIcon";
+import { AddTestForm } from "./AddTestForm";
 
 export const TestsTable = () => {
   const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
@@ -38,7 +39,7 @@ export const TestsTable = () => {
         <div>
           <table className="w-full h-full">
             <tr className="h-[52px] bg-[#EFF3F6]">
-              <th className="rounded-l-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8] text-left pl-[5%]">
+              <th className="rounded-l-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
                 Название теста
               </th>
               <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
@@ -52,7 +53,7 @@ export const TestsTable = () => {
               </th>
             </tr>
             <tr className="border-b border-[#EFF3F6]">
-              <td className="py-[32px] text-left pl-[5%] w-[25%]">
+              <td className="text-center py-[32px] w-[25%]">
                 Геологические признаки вулканической активности и их специфика в
                 применении в условиях Камчатского края
               </td>
@@ -68,13 +69,14 @@ export const TestsTable = () => {
                   <EyeIcon visible />
                   <DeleteIcon visible />
                 </div> */}
-                <p className="relative">
-                  100 - отлично
-                  <div className="absolute right-0 top-[50%] bottom-[50%]">
-                    <EyeIcon visible />
-                  </div>
-                </p>
+                <p className="relative">100 - отлично</p>
               </td>
+              {/* <td>
+                <div className="flex items-center gap-[8px] w-[20%]">
+                  <EyeIcon visible />
+                  <DeleteIcon visible />
+                </div>
+              </td> */}
             </tr>
             <tr className="">
               <td className="text-center py-[32px]">Тест 1</td>
@@ -120,6 +122,7 @@ export const TestsTable = () => {
             </tr>
           </table>
         </div>
+        <AddTestForm />
       </div>
     </>
   );

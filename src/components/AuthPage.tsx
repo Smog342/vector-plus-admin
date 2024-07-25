@@ -12,7 +12,7 @@ export const AuthPage = () => {
             onSubmit={(e) => {
               e.preventDefault();
               console.log("submitted!");
-              navigate("/admin");
+              navigate("/admin/tests");
             }}
             className="flex flex-col gap-[32px]"
           >

@@ -3,6 +3,7 @@ import { SchoolType } from "../types";
 import { EyeIcon } from "../icons/EyeIcon";
 import { DeleteIcon } from "../icons/DeleteIcon";
 import { AddTestForm } from "./AddTestForm";
+import { TestCard } from "./TestCard";
 
 export const TestsTable = () => {
   const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
@@ -53,67 +54,14 @@ export const TestsTable = () => {
               </th>
               <th className="rounded-r-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]"></th>
             </tr>
-            <tr className="border-b border-[#EFF3F6]">
-              <td className="text-center py-[32px] px-[32px] w-[24%]">
-                Геологические признаки вулканической активности и их специфика в
-                применении в условиях Камчатского края
-              </td>
-              <td className="text-center py-[32px] w-[24%]">1-4 класс</td>
-              <td className="text-center py-[32px] w-[24%]">20</td>
-              <td className="text-center py-[32px] px-[32px] w-[24%]">
-                100 - Отлично, ты боольшой молодец! Старайся и дальше так
-                делать, и у тебя всё получится! 100 - отлично
-                {/* <p className="relative">100 - отлично</p> */}
-              </td>
-              <td className="py-[32px] w-[40px]">
-                <div className="flex items-center gap-[8px]">
-                  <EyeIcon visible />
-                  <DeleteIcon visible />
-                </div>
-              </td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
-            <tr className="">
-              <td className="text-center py-[32px]">Тест 1</td>
-              <td className="text-center py-[32px]">1-4 класс</td>
-              <td className="text-center py-[32px]">20</td>
-              <td className="text-center py-[32px]">100 - Отлично</td>
-            </tr>
+            <TestCard
+              name={"Тест #1"}
+              grade={"1-4 класс"}
+              school={"SCHOOL"}
+              questionNumber={20}
+              rate={"100 - Отлично"}
+              visible={true}
+            />
           </table>
         </div>
         <AddTestForm />

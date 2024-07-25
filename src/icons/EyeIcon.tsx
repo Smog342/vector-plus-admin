@@ -1,12 +1,11 @@
 export const EyeIcon = (props: { visible: boolean }) => {
   return (
     <svg
-      className="mr-[6%]"
+      className={`mr-[6%] ${props.visible ? "" : "opacity-50"}`}
       width="16"
       height="12"
       viewBox="0 0 16 12"
       fill="none"
-      fillOpacity={props.visible ? "100%" : "50%"}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

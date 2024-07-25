@@ -218,13 +218,16 @@ export const AddTestForm = () => {
                     </p>
                     <div className="flex gap-[16px]">
                       <p className="font-onest font-normal text-[16px]/[20.4px]">
-                        0-19 — «Нормально»
+                        <span className="text-[#009EEB] font-bold">0-19</span> —
+                        «Нормально»
                       </p>
                       <p className="font-onest font-normal text-[16px]/[20.4px]">
-                        20-59 — «Хорошо»
+                        <span className="text-[#009EEB] font-bold">20-59</span>{" "}
+                        — «Хорошо»
                       </p>
                       <p className="font-onest font-normal text-[16px]/[20.4px]">
-                        60+ — «Отлично»
+                        <span className="text-[#009EEB] font-bold">60+</span> —
+                        «Отлично»
                       </p>
                     </div>
                   </div>
@@ -239,11 +242,11 @@ export const AddTestForm = () => {
                   </div>
                   <div className="flex flex-col gap-[12px]">
                     <p className="font-onest font-medium text-[20px]/[25.5px]">
-                      Текст результата
+                      Описание
                     </p>
                     <input
                       className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                      placeholder="Введите текст результата"
+                      placeholder='Введите описание, например "Хорошо"'
                     ></input>
                   </div>
                 </div>

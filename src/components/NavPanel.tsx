@@ -20,15 +20,17 @@ export const NavPavel = () => {
       >
         <div
           className={`absolute left-0 h-[72px] w-[4px] rounded-r-[16px] bg-[#009EEB] ${
-            pathname !== "/admin/tests" ? "hidden" : ""
+            pathname.includes("/admin/tests") ? "" : "hidden"
           }`}
         ></div>
         <TestIcons
-          color={pathname === "/admin/tests" ? "#009EEB" : "#648AA8"}
+          color={pathname.includes("/admin/tests") ? "#009EEB" : "#648AA8"}
         />
         <p
           className={`font-onest font-medium text-[20px]/[25.5px] ${
-            pathname === "/admin/tests" ? "text-[#009EEB]" : "text-[#648AA8]"
+            pathname.includes("/admin/tests")
+              ? "text-[#009EEB]"
+              : "text-[#648AA8]"
           }`}
         >
           Список тестов

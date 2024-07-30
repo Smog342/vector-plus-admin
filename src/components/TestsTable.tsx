@@ -4,9 +4,11 @@ import { EyeIcon } from "../icons/EyeIcon";
 import { DeleteIcon } from "../icons/DeleteIcon";
 import { AddTestForm } from "./AddTestForm";
 import { TestCard } from "./TestCard";
+import { useAppSelector } from "../store";
 
 export const TestsTable = () => {
   const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
+  const tests = useAppSelector((state) => state.tests.tests);
 
   return (
     <>
@@ -54,14 +56,17 @@ export const TestsTable = () => {
               </th>
               <th className="rounded-r-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]"></th>
             </tr>
-            <TestCard
+            {/* <TestCard
               name={"Тест #1"}
               grade={"1-4 класс"}
               school={"SCHOOL"}
               questionNumber={20}
               rate={"100 - Отлично"}
               visible={true}
-            />
+            /> */}
+            {tests.map((test) =>
+              test.school === schoolType ? <TestCard {...test} /> : <></>
+            )}
           </table>
         </div>
         <AddTestForm />

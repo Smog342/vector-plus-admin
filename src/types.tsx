@@ -8,6 +8,7 @@ export type ButtonProps = {
 export type SchoolType = "SCHOOL" | "PRESCHOOL";
 
 export type TestDataType = {
+  id: number;
   name: string;
   grade: string;
   school: SchoolType;

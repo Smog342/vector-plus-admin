@@ -6,7 +6,7 @@ const initialState: { tests: TestDataType[] } = {
     {
       id: 0,
       name: "Тест #1",
-      grade: "1-4 класс",
+      grade: "JUNIOR",
       school: "SCHOOL",
       questionNumber: 5,
       rate: "100 - Отлично",
@@ -15,7 +15,7 @@ const initialState: { tests: TestDataType[] } = {
     {
       id: 1,
       name: "Тест #2",
-      grade: "10-11 класс",
+      grade: "HIGHSCHOOL",
       school: "SCHOOL",
       questionNumber: 25,
       rate: "0 - Вы исключены",

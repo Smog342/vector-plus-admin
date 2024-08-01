@@ -15,7 +15,13 @@ export const TestCard = (props: TestDataType) => {
         <td className="text-center py-[32px] px-[32px] w-[24%]">
           {props.name}
         </td>
-        <td className="text-center py-[32px] w-[24%]">{props.grade}</td>
+        <td className="text-center py-[32px] w-[24%]">
+          {props.grade === "JUNIOR"
+            ? "1-4 класс"
+            : props.grade === "MIDDLE"
+            ? "5-9 класс"
+            : "10-11 класс"}
+        </td>
         <td className="text-center py-[32px] w-[24%]">
           {props.questionNumber}
         </td>

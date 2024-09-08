@@ -6,11 +6,12 @@ export type ButtonProps = {
 };
 
 export type SchoolType = "SCHOOL" | "PRESCHOOL";
+export type SchoolLevel = "JUNIOR" | "MIDDLE" | "HIGHSCHOOL";
 
 export type TestDataType = {
   id: number;
   name: string;
-  grade: string;
+  grade: SchoolLevel;
   school: SchoolType;
   questionNumber: number;
   rate: string;

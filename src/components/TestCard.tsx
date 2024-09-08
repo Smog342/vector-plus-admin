@@ -2,9 +2,12 @@ import { useState } from "react";
 import { DeleteIcon } from "../icons/DeleteIcon";
 import { EyeIcon } from "../icons/EyeIcon";
 import { TestDataType } from "../types";
+import { useDispatch } from "react-redux";
+import { changeTestVisibility, deleteTest } from "../store/reducers/TestsSlice";
 
 export const TestCard = (props: TestDataType) => {
-  const [visible, setVisible] = useState(props.visible);
+  // const [visible, setVisible] = useState(props.visible);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -12,7 +15,13 @@ export const TestCard = (props: TestDataType) => {
         <td className="text-center py-[32px] px-[32px] w-[24%]">
           {props.name}
         </td>
-        <td className="text-center py-[32px] w-[24%]">{props.grade}</td>
+        <td className="text-center py-[32px] w-[24%]">
+          {props.grade === "JUNIOR"
+            ? "1-4 класс"
+            : props.grade === "MIDDLE"
+            ? "5-9 класс"
+            : "10-11 класс"}
+        </td>
         <td className="text-center py-[32px] w-[24%]">
           {props.questionNumber}
         </td>
@@ -23,12 +32,20 @@ export const TestCard = (props: TestDataType) => {
           <div className="flex items-center gap-[8px]">
             <div
               onClick={() => {
-                setVisible((prev) => !prev);
+                // setVisible((prev) => !prev);
+                dispatch(changeTestVisibility(props.id));
               }}
             >
-              <EyeIcon visible={visible} />
+              <EyeIcon visible={props.visible} />
             </div>
-            <DeleteIcon visible />
+            <div
+              onClick={() => {
+                dispatch(deleteTest(props.id));
+                console.log("trying");
+              }}
+            >
+              <DeleteIcon visible />
+            </div>
           </div>
         </td>
       </tr>

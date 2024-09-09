@@ -2,10 +2,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { EmployersIcon } from "../icons/EmployersIcon";
 import { TestIcons } from "../icons/TestsIcon";
 import { ExitIcon } from "../icons/ExitIcon";
+import { useDispatch } from "react-redux";
+import { logOut } from "../store/reducers/AuthSlice";
 
 export const NavPavel = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
 
   return (
     <nav className="h-screen fixed bg-white w-[280px] flex flex-col py-[80px]">
@@ -63,7 +66,8 @@ export const NavPavel = () => {
       <div
         className="mt-auto ml-[47px] flex gap-[16px] items-center cursor-pointer"
         onClick={() => {
-          navigate("/");
+          dispatch(logOut());
+          //navigate("/");
         }}
       >
         <ExitIcon />

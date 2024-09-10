@@ -10,10 +10,9 @@ export type SchoolLevel = "JUNIOR" | "MIDDLE" | "HIGHSCHOOL";
 
 export type TestDataType = {
   id: number;
-  name: string;
-  grade: SchoolLevel;
-  school: SchoolType;
-  questionNumber: number;
-  rate: string;
-  visible: boolean;
+  title: string;
+  targetAudience: SchoolLevel;
+  organizationType: SchoolType;
+  numberOfQuestions: number;
+  status: boolean;
 };

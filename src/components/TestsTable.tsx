@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { SchoolType } from "../types";
-import { EyeIcon } from "../icons/EyeIcon";
-import { DeleteIcon } from "../icons/DeleteIcon";
 import { AddTestForm } from "./AddTestForm";
 import { TestCard } from "./TestCard";
 import { useAppSelector } from "../store";
+import { useGetTestsQuery } from "../store/api/mainApi";
 
 export const TestsTable = () => {
   const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
-  const tests = useAppSelector((state) => state.tests.tests);
+  //const tests = useAppSelector((state) => state.tests.tests);
+  const { data: tests = [] } = useGetTestsQuery();
   const { searchString } = useAppSelector((state) => state.searchString);
 
   return (
@@ -59,10 +59,14 @@ export const TestsTable = () => {
             </tr>
             {searchString === ""
               ? tests.map((test) =>
-                  test.school === schoolType ? <TestCard {...test} /> : <></>
+                  test.organizationType === schoolType ? (
+                    <TestCard {...test} />
+                  ) : (
+                    <></>
+                  )
                 )
               : tests.map((test) =>
-                  test.name.includes(searchString) ? (
+                  test.title.includes(searchString) ? (
                     <TestCard {...test} />
                   ) : (
                     <></>

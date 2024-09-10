@@ -317,17 +317,7 @@ export const AddTestForm = () => {
                     submit={false}
                     type="BLUE"
                     onClick={() => {
-                      dispatch(
-                        addTest({
-                          id: Math.random() * 1000,
-                          name: testName,
-                          grade: schoolLevel as SchoolLevel,
-                          school: "SCHOOL",
-                          questionNumber: questionsNumber,
-                          rate: pointsSum + " - " + ratePhrase,
-                          visible: true,
-                        })
-                      );
+                      //query
                       setTestName("");
                       setQuestionsNumber(0);
                       setSchoolLevel("");

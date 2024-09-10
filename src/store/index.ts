@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import TestsSlice from "./reducers/TestsSlice";
 import SearchStringSlice from "./reducers/SearchStringSlice";
 import AuthSlice from "./reducers/AuthSlice";
 import { baseApi } from "./api/baseApi";
 
 export const store = configureStore({
   reducer: {
-    tests: TestsSlice,
     searchString: SearchStringSlice,
     auth: AuthSlice,
     [baseApi.reducerPath]: baseApi.reducer,

@@ -28,3 +28,28 @@ export type organizationDataType = {
     }
   ];
 };
+
+export type EmployeeType = {
+  id: number;
+  role: string;
+  username: string;
+  organizationName: string;
+  firstName: string;
+  lastName: string;
+  patronymic: string;
+  birthDate: string;
+};
+
+export type AddEmployeeType = {
+  username: string;
+  password: string;
+  organizationId: number;
+  firstName: string;
+  lastName: string;
+  patronymic: string;
+  birthDate: string;
+  education: string;
+  workPlace: string;
+  workPosition: string;
+  workExperience: number;
+};

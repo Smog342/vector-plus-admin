@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { SchoolType } from "../types";
 import { AddTestForm } from "./AddTestForm";
-import { TestCard } from "./TestCard";
 import { useAppSelector } from "../store";
-import { useGetTestsQuery } from "../store/api/mainApi";
+import { useGetUsersQuery } from "../store/api/mainApi";
+import { EmployeesCard } from "./EmloyeeCard";
+import { AddTesterForm } from "./AddTesterForm";
+import { AddTeacherForm } from "./AddTeacherForm";
 
 export const EmployeesTable = () => {
-  const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
-  //const tests = useAppSelector((state) => state.tests.tests);
-  const { data: tests = [] } = useGetTestsQuery();
+  const [schoolType, setSchoolType] = useState<"ROLE_TESTER" | "ROLE_TEACHER">(
+    "ROLE_TESTER"
+  );
+  const { data: users = [] } = useGetUsersQuery();
   const { searchString } = useAppSelector((state) => state.searchString);
 
   return (
@@ -17,64 +19,63 @@ export const EmployeesTable = () => {
         <div className="mx-auto flex">
           <div
             className={`w-[144px] h-[44px] rounded-l-[8px] font-onest font-medium text-[16px]/[20.4px] text-center px-[32px] py-[12px] ${
-              schoolType === "SCHOOL"
+              schoolType === "ROLE_TESTER"
                 ? "bg-[#648AA8] text-white border border-[#648AA8]"
                 : "bg-white text-[#B1C5D3] border border-[#B1C5D3] border-r-0"
             } cursor-pointer`}
             onClick={() => {
-              setSchoolType((prev) => "SCHOOL");
+              setSchoolType((prev) => "ROLE_TESTER");
             }}
           >
-            Школьник
+            Учитель
           </div>
           <div
             className={`w-[162px] h-[44px] rounded-r-[8px] font-onest font-medium text-[16px]/[20.4px] text-center px-[32px] py-[12px] ${
-              schoolType === "KINDERGARTEN"
+              schoolType === "ROLE_TEACHER"
                 ? "bg-[#648AA8] text-white border border-[#648AA8]"
                 : "bg-white text-[#B1C5D3] border border-[#B1C5D3] border-l-0"
             } cursor-pointer`}
             onClick={() => {
-              setSchoolType((prev) => "KINDERGARTEN");
+              setSchoolType((prev) => "ROLE_TEACHER");
             }}
           >
-            Дошкольник
+            Тестолог
           </div>
         </div>
         <div>
           <table className="w-full h-full">
             <tr className="h-[52px] bg-[#EFF3F6]">
               <th className="rounded-l-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
-                Название теста
+                ФИО
               </th>
               <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
-                Целевая аудитория
+                Тип
               </th>
               <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
-                Количество вопросов
-              </th>
-              <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
-                Количество баллов
+                Организация
               </th>
               <th className="rounded-r-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]"></th>
             </tr>
             {searchString === ""
-              ? tests.map((test) =>
-                  test.organizationType === schoolType ? (
-                    <TestCard {...test} />
-                  ) : (
-                    <></>
-                  )
+              ? users.map((user) =>
+                  user.role === schoolType ? <EmployeesCard {...user} /> : <></>
                 )
-              : tests.map((test) =>
-                  test.title.includes(searchString) ? (
-                    <TestCard {...test} />
+              : users.map((user) =>
+                  (
+                    user.lastName +
+                    " " +
+                    user.firstName +
+                    " " +
+                    user.patronymic
+                  ).includes(searchString) ? (
+                    <EmployeesCard {...user} />
                   ) : (
                     <></>
                   )
                 )}
           </table>
         </div>
-        <AddTestForm />
+        {schoolType === "ROLE_TESTER" ? <AddTesterForm /> : <AddTeacherForm />}
       </div>
     </>
   );

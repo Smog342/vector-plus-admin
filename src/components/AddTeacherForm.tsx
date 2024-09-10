@@ -8,7 +8,7 @@ import {
   useGetOrganizationsQuery,
 } from "../store/api/mainApi";
 
-export const AddOrgForm = () => {
+export const AddTeacherForm = () => {
   const dialog = useRef<HTMLDialogElement>(null);
   const [groupName, setGroupName] = useState<string>("");
   const [groups, setGroups] = useState<string[]>([]);
@@ -61,7 +61,7 @@ export const AddOrgForm = () => {
                   </p>
                   <input
                     className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                    placeholder="Введите название организации"
+                    placeholder="Введите название теста"
                     value={orgName}
                     onChange={(e) => {
                       setOrgName(e.target.value);

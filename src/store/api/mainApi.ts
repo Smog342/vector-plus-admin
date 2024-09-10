@@ -1,4 +1,10 @@
-import { SchoolType, TestDataType, organizationDataType } from "../../types";
+import {
+  AddEmployeeType,
+  EmployeeType,
+  SchoolType,
+  TestDataType,
+  organizationDataType,
+} from "../../types";
 import { baseApi } from "./baseApi";
 
 export const mainApiSlice = baseApi.injectEndpoints({
@@ -13,7 +19,29 @@ export const mainApiSlice = baseApi.injectEndpoints({
         url: `organizations/all`,
       }),
     }),
+    getUsers: builder.query<EmployeeType[], void>({
+      query: () => ({
+        url: `admin/users/all`,
+      }),
+    }),
     createOrganization: builder.mutation<
+      void,
+      { name: string; type: SchoolType; groups: string[] }
+    >({
+      query: (arg) => ({
+        url: `admin/organizations`,
+        body: arg,
+        method: "POST",
+      }),
+    }),
+    createTester: builder.mutation<void, AddEmployeeType>({
+      query: (arg) => ({
+        url: `admin/users?role=tester`,
+        body: arg,
+        method: "POST",
+      }),
+    }),
+    createTeacher: builder.mutation<
       void,
       { name: string; type: SchoolType; groups: string[] }
     >({
@@ -29,6 +57,12 @@ export const mainApiSlice = baseApi.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    deleteUser: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `admin/users/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -37,4 +71,7 @@ export const {
   useGetOrganizationsQuery,
   useCreateOrganizationMutation,
   useDeleteOrganizationMutation,
+  useGetUsersQuery,
+  useDeleteUserMutation,
+  useCreateTesterMutation,
 } = mainApiSlice;

@@ -27,7 +27,7 @@ export const EmployeesTable = () => {
               setSchoolType((prev) => "ROLE_TESTER");
             }}
           >
-            Учитель
+            Тестолог
           </div>
           <div
             className={`w-[162px] h-[44px] rounded-r-[8px] font-onest font-medium text-[16px]/[20.4px] text-center px-[32px] py-[12px] ${
@@ -39,7 +39,7 @@ export const EmployeesTable = () => {
               setSchoolType((prev) => "ROLE_TEACHER");
             }}
           >
-            Тестолог
+            Учитель
           </div>
         </div>
         <div>

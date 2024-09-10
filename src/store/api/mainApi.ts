@@ -24,6 +24,11 @@ export const mainApiSlice = baseApi.injectEndpoints({
         url: `admin/users/all`,
       }),
     }),
+    getGroupes: builder.query<{ id: number; name: string }[], number>({
+      query: (id) => ({
+        url: `organizations/groups?organizationId=${id}`,
+      }),
+    }),
     createOrganization: builder.mutation<
       void,
       { name: string; type: SchoolType; groups: string[] }
@@ -43,10 +48,10 @@ export const mainApiSlice = baseApi.injectEndpoints({
     }),
     createTeacher: builder.mutation<
       void,
-      { name: string; type: SchoolType; groups: string[] }
+      AddEmployeeType & { groupIds: number[] }
     >({
       query: (arg) => ({
-        url: `admin/organizations`,
+        url: `admin/users/teacher`,
         body: arg,
         method: "POST",
       }),
@@ -74,4 +79,6 @@ export const {
   useGetUsersQuery,
   useDeleteUserMutation,
   useCreateTesterMutation,
+  useGetGroupesQuery,
+  useCreateTeacherMutation,
 } = mainApiSlice;

@@ -1,11 +1,16 @@
 import { DeleteIcon } from "../icons/DeleteIcon";
 import { EyeIcon } from "../icons/EyeIcon";
+import {
+  useChangeTestStatusMutation,
+  useDeleteTestMutation,
+  useGetTestsQuery,
+} from "../store/api/mainApi";
 import { TestDataType } from "../types";
-import { useDispatch } from "react-redux";
 
 export const TestCard = (props: TestDataType) => {
-  // const [visible, setVisible] = useState(props.visible);
-  const dispatch = useDispatch();
+  const [deleteTest] = useDeleteTestMutation();
+  const [changeTestStatus] = useChangeTestStatusMutation();
+  const { refetch } = useGetTestsQuery();
 
   return (
     <>
@@ -30,16 +35,18 @@ export const TestCard = (props: TestDataType) => {
           <div className="flex items-center gap-[8px]">
             <div
               onClick={() => {
-                // setVisible((prev) => !prev);
-                // dispatch(changeTestVisibility(props.id));
+                changeTestStatus(props.id).then(() => {
+                  refetch();
+                });
               }}
             >
-              <EyeIcon visible={props.status} />
+              <EyeIcon visible={props.status === "ACTIVE"} />
             </div>
             <div
               onClick={() => {
-                //dispatch(deleteTest(props.id));
-                console.log("trying");
+                deleteTest(props.id).then(() => {
+                  refetch();
+                });
               }}
             >
               <DeleteIcon visible />

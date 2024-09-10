@@ -14,7 +14,7 @@ export type TestDataType = {
   targetAudience: SchoolLevel;
   organizationType: SchoolType;
   numberOfQuestions: number;
-  status: boolean;
+  status: "ACTIVE" | "DISABLED";
 };
 
 export type organizationDataType = {

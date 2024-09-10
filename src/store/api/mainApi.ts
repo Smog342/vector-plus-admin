@@ -68,6 +68,18 @@ export const mainApiSlice = baseApi.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    deleteTest: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `admin/tests?testId=${id}`,
+        method: "DELETE",
+      }),
+    }),
+    changeTestStatus: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `admin/tests/status?testId=${id}`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -81,4 +93,6 @@ export const {
   useCreateTesterMutation,
   useGetGroupesQuery,
   useCreateTeacherMutation,
+  useDeleteTestMutation,
+  useChangeTestStatusMutation,
 } = mainApiSlice;

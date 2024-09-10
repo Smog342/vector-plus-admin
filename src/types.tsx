@@ -5,7 +5,7 @@ export type ButtonProps = {
   submit: boolean;
 };
 
-export type SchoolType = "SCHOOL" | "PRESCHOOL";
+export type SchoolType = "SCHOOL" | "KINDERGARTEN";
 export type SchoolLevel = "JUNIOR" | "MIDDLE" | "HIGHSCHOOL";
 
 export type TestDataType = {
@@ -15,4 +15,16 @@ export type TestDataType = {
   organizationType: SchoolType;
   numberOfQuestions: number;
   status: boolean;
+};
+
+export type organizationDataType = {
+  id: number;
+  name: string;
+  type: SchoolType;
+  groups: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
 };

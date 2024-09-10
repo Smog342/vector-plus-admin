@@ -64,6 +64,30 @@ export const NavPavel = () => {
         </p>
       </div>
       <div
+        className="h-[72px] pl-[47px] flex gap-[16px] items-center cursor-pointer relative"
+        onClick={() => {
+          navigate("/admin/organizations");
+        }}
+      >
+        <div
+          className={`absolute left-0 h-[72px] w-[4px] rounded-r-[16px] bg-[#009EEB] ${
+            pathname !== "/admin/organizations" ? "hidden" : ""
+          }`}
+        ></div>
+        <EmployersIcon
+          color={pathname === "/admin/organizations" ? "#009EEB" : "#648AA8"}
+        />
+        <p
+          className={`font-onest font-medium text-[20px]/[25.5px] ${
+            pathname === "/admin/organizations"
+              ? "text-[#009EEB]"
+              : "text-[#648AA8]"
+          }`}
+        >
+          Организации
+        </p>
+      </div>
+      <div
         className="mt-auto ml-[47px] flex gap-[16px] items-center cursor-pointer"
         onClick={() => {
           dispatch(logOut());

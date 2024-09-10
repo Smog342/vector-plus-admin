@@ -2,6 +2,8 @@ import { useLocation } from "react-router-dom";
 import { NavPavel } from "./NavPanel";
 import { Header } from "./Header";
 import { TestsTable } from "./TestsTable";
+import { EmployeesTable } from "./EmployeesTable";
+import { OrganizationsTable } from "./OrganizationsTable";
 
 export const AdminPanel = () => {
   const { pathname } = useLocation();
@@ -16,8 +18,16 @@ export const AdminPanel = () => {
               <Header />
               <TestsTable />
             </>
+          ) : pathname.includes("/admin/employees") ? (
+            <>
+              <Header />
+              <EmployeesTable />
+            </>
           ) : (
-            <></>
+            <>
+              <Header />
+              <OrganizationsTable />
+            </>
           )}
         </div>
       </div>

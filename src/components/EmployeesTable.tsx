@@ -5,7 +5,7 @@ import { TestCard } from "./TestCard";
 import { useAppSelector } from "../store";
 import { useGetTestsQuery } from "../store/api/mainApi";
 
-export const TestsTable = () => {
+export const EmployeesTable = () => {
   const [schoolType, setSchoolType] = useState<SchoolType>("SCHOOL");
   //const tests = useAppSelector((state) => state.tests.tests);
   const { data: tests = [] } = useGetTestsQuery();

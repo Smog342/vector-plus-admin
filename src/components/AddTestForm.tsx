@@ -385,7 +385,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           setTestName("");
                           setQuestionsNumber(0);
                           setSchoolLevel("");
-                          setPointsSum(0);
                           setRatePhrase("");
                           navigate("/admin/tests");
                           dialog.current?.close();

@@ -23,7 +23,7 @@ export const EmployeesTable = () => {
                 : "bg-white text-[#B1C5D3] border border-[#B1C5D3] border-r-0"
             } cursor-pointer`}
             onClick={() => {
-              setSchoolType((prev) => "ROLE_TESTER");
+              setSchoolType((_) => "ROLE_TESTER");
             }}
           >
             Тестолог
@@ -35,7 +35,7 @@ export const EmployeesTable = () => {
                 : "bg-white text-[#B1C5D3] border border-[#B1C5D3] border-l-0"
             } cursor-pointer`}
             onClick={() => {
-              setSchoolType((prev) => "ROLE_TEACHER");
+              setSchoolType((_) => "ROLE_TEACHER");
             }}
           >
             Учитель

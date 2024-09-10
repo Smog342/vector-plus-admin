@@ -22,7 +22,7 @@ export const TestsTable = () => {
                 : "bg-white text-[#B1C5D3] border border-[#B1C5D3] border-r-0"
             } cursor-pointer`}
             onClick={() => {
-              setSchoolType((prev) => "SCHOOL");
+              setSchoolType((_) => "SCHOOL");
             }}
           >
             Школьник
@@ -34,7 +34,7 @@ export const TestsTable = () => {
                 : "bg-white text-[#B1C5D3] border border-[#B1C5D3] border-l-0"
             } cursor-pointer`}
             onClick={() => {
-              setSchoolType((prev) => "KINDERGARTEN");
+              setSchoolType((_) => "KINDERGARTEN");
             }}
           >
             Дошкольник

@@ -200,7 +200,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         if (Number.isNaN(num) || num < 0) {
                           num = 0;
                         }
-                        setQuestionsNumber((prev) => num);
+                        setQuestionsNumber((_) => num);
                       }}
                       value={questionsNumber}
                     ></input>
@@ -227,7 +227,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
               </>
             ) : pathname === "/admin/tests/1" ? (
               <>
-                {[...Array(questionsNumber)].map((obj, i) => (
+                {[...Array(questionsNumber)].map((_, i) => (
                   <>
                     <p className="mr-auto font-onest font-bold text-[28px]/[35.7px]">
                       {"Вопрос " + (i + 1)}
@@ -371,15 +371,13 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         description: "",
                         targetAudience: schoolLevel,
                         organizationType: props.type,
-                        questions: [...Array(questionsNumber)].map(
-                          (obj, i) => ({
-                            questionNumber: i + 1,
-                            description: "Описание",
-                            points: 0,
-                            answerVariants: [],
-                            correctAnswers: [],
-                          })
-                        ),
+                        questions: [...Array(questionsNumber)].map((_, i) => ({
+                          questionNumber: i + 1,
+                          description: "Описание",
+                          points: 0,
+                          answerVariants: [],
+                          correctAnswers: [],
+                        })),
                       }).then(() => {
                         refetch().then(() => {
                           setTestName("");

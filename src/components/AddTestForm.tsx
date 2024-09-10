@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { RadioEmpty } from "../icons/RadioEmpty";
 import { RadioChecked } from "../icons/RadioChecked";
 import { SchoolLevel, SchoolType } from "../types";
-import { useDispatch } from "react-redux";
 import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
 
 export const AddTestForm = (props: { type: SchoolType }) => {
@@ -12,7 +11,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
   const [questionsNumber, setQuestionsNumber] = useState<number>(0);
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel | "">("");
   const [testName, setTestName] = useState<string>("");
-  const [pointsSum, setPointsSum] = useState<number>(0);
   const [ratePhrase, setRatePhrase] = useState<string>("");
   const [questionsData, setQuestionsData] = useState<
     { type: string; answervariants: string[]; correctAnswer: string }[]
@@ -20,7 +18,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleClickOutsideForm = ({ target }: MouseEvent) => {
     let tar = target as Element;

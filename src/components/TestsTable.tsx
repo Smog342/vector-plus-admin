@@ -52,9 +52,6 @@ export const TestsTable = () => {
               <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
                 Количество вопросов
               </th>
-              <th className="font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]">
-                Количество баллов
-              </th>
               <th className="rounded-r-[12px] font-onest font-medium text-[16px]/[20.4px] text-[#648AA8]"></th>
             </tr>
             {searchString === ""
@@ -74,7 +71,7 @@ export const TestsTable = () => {
                 )}
           </table>
         </div>
-        <AddTestForm />
+        <AddTestForm type={schoolType} />
       </div>
     </>
   );

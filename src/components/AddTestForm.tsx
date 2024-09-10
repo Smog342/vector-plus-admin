@@ -3,18 +3,20 @@ import { CustomButton } from "./CustomButton";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RadioEmpty } from "../icons/RadioEmpty";
 import { RadioChecked } from "../icons/RadioChecked";
-import { SchoolLevel } from "../types";
+import { SchoolLevel, SchoolType } from "../types";
 import { useDispatch } from "react-redux";
-import { addTest } from "../store/reducers/TestsSlice";
+import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
 
-export const AddTestForm = () => {
+export const AddTestForm = (props: { type: SchoolType }) => {
   const dialog = useRef<HTMLDialogElement>(null);
   const [questionsNumber, setQuestionsNumber] = useState<number>(0);
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel | "">("");
   const [testName, setTestName] = useState<string>("");
   const [pointsSum, setPointsSum] = useState<number>(0);
   const [ratePhrase, setRatePhrase] = useState<string>("");
-  const [questionsData, setQuestionsData] = useState<{}>([]);
+  const [questionsData, setQuestionsData] = useState<
+    { type: string; answervariants: string[]; correctAnswer: string }[]
+  >([]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -28,14 +30,15 @@ export const AddTestForm = () => {
     }
   };
 
+  const [addTest] = useCreateTestMutation();
+  const { refetch } = useGetTestsQuery();
+
   useEffect(() => {
     dialog.current?.addEventListener("click", handleClickOutsideForm);
     return () => {
       dialog.current?.removeEventListener("click", handleClickOutsideForm);
     };
   }, []);
-
-  useEffect(() => {}, [questionsNumber]);
 
   return (
     <>
@@ -74,64 +77,120 @@ export const AddTestForm = () => {
                       }}
                     ></input>
                   </div>
-                  <div className="flex flex-col gap-[12px]">
-                    <p className="font-onest font-medium text-[20px]/[25.5px]">
-                      Целевая аудитория
-                    </p>
+                  {props.type === "SCHOOL" ? (
+                    <div className="flex flex-col gap-[12px]">
+                      <p className="font-onest font-medium text-[20px]/[25.5px]">
+                        Целевая аудитория
+                      </p>
+                      <div className="flex gap-[24px]">
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"JUNIOR"}
+                            name="schoolLevel"
+                            className="hidden"
+                            onChange={(e) =>
+                              setSchoolLevel(e.target.value as SchoolLevel)
+                            }
+                          ></input>
+                          {schoolLevel === "JUNIOR" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          1-4 класс
+                        </label>
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"MIDDLE"}
+                            name="schoolLevel"
+                            className="hidden"
+                            onChange={(e) =>
+                              setSchoolLevel(e.target.value as SchoolLevel)
+                            }
+                          ></input>
+                          {schoolLevel === "MIDDLE" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          5-9 класс
+                        </label>
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"HIGHSCHOOL"}
+                            name="schoolLevel"
+                            className="hidden"
+                            onChange={(e) =>
+                              setSchoolLevel(e.target.value as SchoolLevel)
+                            }
+                          ></input>
+                          {schoolLevel === "HIGHSCHOOL" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          10-11 класс
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
                     <div className="flex gap-[24px]">
                       <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                         <input
                           type="radio"
-                          value={"JUNIOR"}
+                          value={"GROUP 1"}
                           name="schoolLevel"
                           className="hidden"
                           onChange={(e) =>
                             setSchoolLevel(e.target.value as SchoolLevel)
                           }
                         ></input>
-                        {schoolLevel === "JUNIOR" ? (
+                        {schoolLevel === "GROUP 1" ? (
                           <RadioChecked />
                         ) : (
                           <RadioEmpty />
                         )}
-                        1-4 класс
+                        1 группа
                       </label>
                       <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                         <input
                           type="radio"
-                          value={"MIDDLE"}
+                          value={"GROUP 2"}
                           name="schoolLevel"
                           className="hidden"
                           onChange={(e) =>
                             setSchoolLevel(e.target.value as SchoolLevel)
                           }
                         ></input>
-                        {schoolLevel === "MIDDLE" ? (
+                        {schoolLevel === "GROUP 2" ? (
                           <RadioChecked />
                         ) : (
                           <RadioEmpty />
                         )}
-                        5-9 класс
+                        2 группа
                       </label>
                       <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                         <input
                           type="radio"
-                          value={"HIGHSCHOOL"}
+                          value={"GROUP 3"}
                           name="schoolLevel"
                           className="hidden"
                           onChange={(e) =>
                             setSchoolLevel(e.target.value as SchoolLevel)
                           }
                         ></input>
-                        {schoolLevel === "HIGHSCHOOL" ? (
+                        {schoolLevel === "GROUP 3" ? (
                           <RadioChecked />
                         ) : (
                           <RadioEmpty />
                         )}
-                        10-11 класс
+                        3 группа
                       </label>
                     </div>
-                  </div>
+                  )}
                   <div className="flex flex-col gap-[12px]">
                     <p className="font-onest font-medium text-[20px]/[25.5px]">
                       Количество вопросов
@@ -155,6 +214,14 @@ export const AddTestForm = () => {
                     type="BLUE"
                     text="ПРОДОЛЖИТЬ"
                     onClick={() => {
+                      setQuestionsData(
+                        Array.from({ length: questionsNumber }, () => ({
+                          type: "",
+                          answervariants: [],
+                          correctAnswer: "",
+                        }))
+                      );
+                      console.log(questionsData);
                       navigate("/admin/tests/1");
                     }}
                     submit={false}
@@ -223,6 +290,24 @@ export const AddTestForm = () => {
                       </div>
                       <div className="flex flex-col gap-[12px]">
                         <p className="font-onest font-medium text-[20px]/[25.5px]">
+                          Варианты ответов
+                        </p>
+                        <input
+                          className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                          placeholder="Введите возможный вариант"
+                        ></input>
+                      </div>
+                      <div className="flex flex-col gap-[12px]">
+                        <p className="font-onest font-medium text-[20px]/[25.5px]">
+                          Правильные ответы
+                        </p>
+                        <input
+                          className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                          placeholder="Введите правильный ответ"
+                        ></input>
+                      </div>
+                      <div className="flex flex-col gap-[12px]">
+                        <p className="font-onest font-medium text-[20px]/[25.5px]">
                           Балл за ответ
                         </p>
                         <input
@@ -260,50 +345,14 @@ export const AddTestForm = () => {
                 <div className="flex flex-col gap-[24px]">
                   <div className="flex flex-col gap-[12px]">
                     <p className="font-onest font-medium text-[20px]/[25.5px]">
-                      Критерии оценки
-                    </p>
-                    <div className="flex gap-[16px]">
-                      <p className="font-onest font-normal text-[16px]/[20.4px]">
-                        <span className="text-[#009EEB] font-bold">0-19</span> —
-                        «Нормально»
-                      </p>
-                      <p className="font-onest font-normal text-[16px]/[20.4px]">
-                        <span className="text-[#009EEB] font-bold">20-59</span>{" "}
-                        — «Хорошо»
-                      </p>
-                      <p className="font-onest font-normal text-[16px]/[20.4px]">
-                        <span className="text-[#009EEB] font-bold">60+</span> —
-                        «Отлично»
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-[12px]">
-                    <p className="font-onest font-medium text-[20px]/[25.5px]">
-                      Сумма баллов
-                    </p>
-                    <input
-                      className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                      placeholder="Введите сумму баллов"
-                      value={pointsSum}
-                      onChange={(e) => {
-                        let num = parseInt(e.target.value);
-                        if (Number.isNaN(num) || num < 0) {
-                          num = 0;
-                        }
-                        setPointsSum((prev) => num);
-                      }}
-                    ></input>
-                  </div>
-                  <div className="flex flex-col gap-[12px]">
-                    <p className="font-onest font-medium text-[20px]/[25.5px]">
                       Описание
                     </p>
-                    <input
+                    <textarea
                       className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                      placeholder='Введите описание, например "Хорошо"'
+                      placeholder="Введите описание теста"
                       value={ratePhrase}
                       onChange={(e) => setRatePhrase(e.target.value)}
-                    ></input>
+                    ></textarea>
                   </div>
                 </div>
                 <div className="mt-auto mx-auto flex gap-[32px]">
@@ -320,14 +369,31 @@ export const AddTestForm = () => {
                     submit={false}
                     type="BLUE"
                     onClick={() => {
-                      //query
-                      setTestName("");
-                      setQuestionsNumber(0);
-                      setSchoolLevel("");
-                      setPointsSum(0);
-                      setRatePhrase("");
-                      navigate("/admin/tests");
-                      dialog.current?.close();
+                      addTest({
+                        title: testName,
+                        description: "",
+                        targetAudience: schoolLevel,
+                        organizationType: props.type,
+                        questions: [...Array(questionsNumber)].map(
+                          (obj, i) => ({
+                            questionNumber: i + 1,
+                            description: "Описание",
+                            points: 0,
+                            answerVariants: [],
+                            correctAnswers: [],
+                          })
+                        ),
+                      }).then(() => {
+                        refetch().then(() => {
+                          setTestName("");
+                          setQuestionsNumber(0);
+                          setSchoolLevel("");
+                          setPointsSum(0);
+                          setRatePhrase("");
+                          navigate("/admin/tests");
+                          dialog.current?.close();
+                        });
+                      });
                     }}
                   />
                 </div>

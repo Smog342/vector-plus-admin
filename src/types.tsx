@@ -6,7 +6,13 @@ export type ButtonProps = {
 };
 
 export type SchoolType = "SCHOOL" | "KINDERGARTEN";
-export type SchoolLevel = "JUNIOR" | "MIDDLE" | "HIGHSCHOOL";
+export type SchoolLevel =
+  | "JUNIOR"
+  | "MIDDLE"
+  | "HIGHSCHOOL"
+  | "GROUP 1"
+  | "GROUP 2"
+  | "GROUP 3";
 
 export type TestDataType = {
   id: number;
@@ -52,4 +58,23 @@ export type AddEmployeeType = {
   workPlace: string;
   workPosition: string;
   workExperience: number;
+};
+
+export type AddTestData = {
+  title: string;
+  description: string;
+  targetAudience: string;
+  organizationType: string;
+  questions: {
+    questionNumber: number;
+    description: string;
+    points: number;
+    answerVariants: {
+      images: {
+        image: string;
+      }[];
+      text: string;
+    }[];
+    correctAnswers: string[];
+  }[];
 };

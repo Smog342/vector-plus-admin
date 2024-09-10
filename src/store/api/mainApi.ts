@@ -1,5 +1,6 @@
 import {
   AddEmployeeType,
+  AddTestData,
   EmployeeType,
   SchoolType,
   TestDataType,
@@ -80,6 +81,13 @@ export const mainApiSlice = baseApi.injectEndpoints({
         method: "PATCH",
       }),
     }),
+    createTest: builder.mutation<void, AddTestData>({
+      query: (arg) => ({
+        url: `admin/tests`,
+        body: arg,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -95,4 +103,5 @@ export const {
   useCreateTeacherMutation,
   useDeleteTestMutation,
   useChangeTestStatusMutation,
+  useCreateTestMutation,
 } = mainApiSlice;

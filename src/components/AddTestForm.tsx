@@ -14,6 +14,7 @@ export const AddTestForm = () => {
   const [testName, setTestName] = useState<string>("");
   const [pointsSum, setPointsSum] = useState<number>(0);
   const [ratePhrase, setRatePhrase] = useState<string>("");
+  const [questionsData, setQuestionsData] = useState<{}>([]);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ export const AddTestForm = () => {
       dialog.current?.removeEventListener("click", handleClickOutsideForm);
     };
   }, []);
+
+  useEffect(() => {}, [questionsNumber]);
 
   return (
     <>
@@ -73,7 +76,7 @@ export const AddTestForm = () => {
                   </div>
                   <div className="flex flex-col gap-[12px]">
                     <p className="font-onest font-medium text-[20px]/[25.5px]">
-                      Целевая аудтория
+                      Целевая аудитория
                     </p>
                     <div className="flex gap-[24px]">
                       <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">

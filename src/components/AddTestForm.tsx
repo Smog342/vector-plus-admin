@@ -19,7 +19,12 @@ export const AddTestForm = (props: { type: SchoolType }) => {
       description: string;
       type: string;
       points: number;
-      answervariants: { id: number; images: { image: string }; text: string }[];
+      answervariants: {
+        id: number;
+        images: { image: string };
+        text: string;
+        correct: boolean;
+      }[];
       answerFieldValue: string;
       correctAnswers: string[];
     }[]
@@ -331,6 +336,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                             id: qd.answervariants.length,
                                             text: qd.answerFieldValue,
                                             images: { image: "" },
+                                            correct: false,
                                           },
                                         ],
                                       }
@@ -352,11 +358,11 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           value={questionsData[i].answerFieldValue}
                         ></input>
                         {questionsData[i].answervariants.map((ans, j) => (
-                          <div className="flex w-full" key={j}>
+                          <div className="flex w-full items-center" key={j}>
                             <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
                               {ans.text}
                             </p>
-                            <div className="ml-auto">
+                            <div className="ml-auto flex gap-[8px]">
                               <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
                                 <input
                                   type="file"
@@ -397,6 +403,36 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                 ></input>
                                 Загрузить изображение
                               </label>
+                              <button
+                                onClick={() => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === i
+                                        ? {
+                                            ...qd,
+                                            answervariants:
+                                              qd.answervariants.map((ans) =>
+                                                ans.id === j
+                                                  ? {
+                                                      ...ans,
+                                                      correct: !ans.correct,
+                                                    }
+                                                  : ans
+                                              ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                                type="button"
+                                className=""
+                              >
+                                {ans.correct ? (
+                                  <RadioChecked />
+                                ) : (
+                                  <RadioEmpty />
+                                )}
+                              </button>
                             </div>
                           </div>
                         ))}

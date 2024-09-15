@@ -6,6 +6,7 @@ import { RadioChecked } from "../icons/RadioChecked";
 import { SchoolLevel, SchoolType } from "../types";
 import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
 import uuid from "react-uuid";
+import { DeleteIcon } from "../icons/DeleteIcon";
 
 export const AddTestForm = (props: { type: SchoolType }) => {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -532,6 +533,26 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                 </label>
                               )}
                             </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? {
+                                          ...qd,
+                                          answervariants:
+                                            qd.answervariants.filter(
+                                              (variant) => variant.id !== ans.id
+                                            ),
+                                        }
+                                      : qd
+                                  )
+                                );
+                              }}
+                            >
+                              <DeleteIcon visible />
+                            </button>
                           </div>
                         ))}
                       </div>

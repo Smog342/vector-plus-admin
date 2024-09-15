@@ -5,6 +5,7 @@ import { RadioEmpty } from "../icons/RadioEmpty";
 import { RadioChecked } from "../icons/RadioChecked";
 import { SchoolLevel, SchoolType } from "../types";
 import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
+import uuid from "react-uuid";
 
 export const AddTestForm = (props: { type: SchoolType }) => {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -15,12 +16,12 @@ export const AddTestForm = (props: { type: SchoolType }) => {
   const [ratePhrase, setRatePhrase] = useState<string>("");
   const [questionsData, setQuestionsData] = useState<
     {
-      id: number;
+      id: string;
       description: string;
       type: string;
       points: number;
       answervariants: {
-        id: number;
+        id: string;
         images: { image: string };
         text: string;
         correct: boolean;
@@ -228,9 +229,9 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     onClick={() => {
                       setQuestionsData(
                         Array.from({ length: questionsNumber }, (_, i) => ({
-                          id: i,
+                          id: uuid(),
                           description: "",
-                          type: "",
+                          type: "one",
                           points: 0,
                           answervariants: [],
                           answerFieldValue: "",
@@ -246,7 +247,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
               </>
             ) : pathname === "/admin/tests/1" ? (
               <>
-                {[...Array(questionsNumber)].map((_, i) => (
+                {questionsData.map((obj, i) => (
                   <>
                     <p className="mr-auto font-onest font-bold text-[28px]/[35.7px]">
                       {"Вопрос " + (i + 1)}
@@ -262,7 +263,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           onChange={(e) => {
                             setQuestionsData((prev) =>
                               prev.map((qd) =>
-                                qd.id === i
+                                qd.id === obj.id
                                   ? { ...qd, description: e.target.value }
                                   : qd
                               )
@@ -289,7 +290,9 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               onChange={() => {
                                 setQuestionsData((prev) =>
                                   prev.map((qd) =>
-                                    qd.id === i ? { ...qd, type: "one" } : qd
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "one" }
+                                      : qd
                                   )
                                 );
                               }}
@@ -310,7 +313,9 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               onChange={() => {
                                 setQuestionsData((prev) =>
                                   prev.map((qd) =>
-                                    qd.id === i ? { ...qd, type: "open" } : qd
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "open" }
+                                      : qd
                                   )
                                 );
                               }}
@@ -330,7 +335,9 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               onChange={() => {
                                 setQuestionsData((prev) =>
                                   prev.map((qd) =>
-                                    qd.id === i ? { ...qd, type: "match" } : qd
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "match" }
+                                      : qd
                                   )
                                 );
                               }}
@@ -351,7 +358,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               onChange={() => {
                                 setQuestionsData((prev) =>
                                   prev.map((qd) =>
-                                    qd.id === i
+                                    qd.id === obj.id
                                       ? { ...qd, type: "several" }
                                       : qd
                                   )
@@ -379,15 +386,15 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                             e.preventDefault();
                             if (e.code === "Enter") {
                               setQuestionsData((prev) =>
-                                prev.map((qd, j) =>
-                                  qd.id === i
+                                prev.map((qd) =>
+                                  qd.id === obj.id
                                     ? {
                                         ...qd,
                                         answerFieldValue: "",
                                         answervariants: [
                                           ...qd.answervariants,
                                           {
-                                            id: qd.answervariants.length,
+                                            id: uuid(),
                                             text: qd.answerFieldValue,
                                             images: { image: "" },
                                             correct: false,
@@ -403,7 +410,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           onChange={(e) => {
                             setQuestionsData((prev) =>
                               prev.map((qd) =>
-                                qd.id === i
+                                qd.id === obj.id
                                   ? { ...qd, answerFieldValue: e.target.value }
                                   : qd
                               )
@@ -412,7 +419,10 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           value={questionsData[i].answerFieldValue}
                         ></input>
                         {questionsData[i].answervariants.map((ans, j) => (
-                          <div className="flex w-full items-center" key={j}>
+                          <div
+                            className="flex w-full items-center"
+                            key={ans.id}
+                          >
                             <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
                               {ans.text}
                             </p>
@@ -429,13 +439,13 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                         console.log(reader.result);
                                         setQuestionsData((prev) =>
                                           prev.map((qd) =>
-                                            qd.id === i
+                                            qd.id === obj.id
                                               ? {
                                                   ...qd,
                                                   answervariants:
                                                     qd.answervariants.map(
-                                                      (ans) =>
-                                                        ans.id === j
+                                                      (variant) =>
+                                                        variant.id === ans.id
                                                           ? {
                                                               ...ans,
                                                               images: {
@@ -443,7 +453,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                                                   reader.result as string,
                                                               },
                                                             }
-                                                          : ans
+                                                          : variant
                                                     ),
                                                 }
                                               : qd
@@ -457,36 +467,70 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                 ></input>
                                 Загрузить изображение
                               </label>
-                              <button
-                                onClick={() => {
-                                  setQuestionsData((prev) =>
-                                    prev.map((qd) =>
-                                      qd.id === i
-                                        ? {
-                                            ...qd,
-                                            answervariants:
-                                              qd.answervariants.map((ans) =>
-                                                ans.id === j
-                                                  ? {
-                                                      ...ans,
-                                                      correct: !ans.correct,
-                                                    }
-                                                  : ans
-                                              ),
-                                          }
-                                        : qd
-                                    )
-                                  );
-                                }}
-                                type="button"
-                                className=""
-                              >
-                                {ans.correct ? (
-                                  <RadioChecked />
-                                ) : (
-                                  <RadioEmpty />
-                                )}
-                              </button>
+                              {questionsData[i].type === "several" ? (
+                                <button
+                                  onClick={() => {
+                                    setQuestionsData((prev) =>
+                                      prev.map((qd) =>
+                                        qd.id === obj.id
+                                          ? {
+                                              ...qd,
+                                              answervariants:
+                                                qd.answervariants.map(
+                                                  (variant) =>
+                                                    variant.id === ans.id
+                                                      ? {
+                                                          ...ans,
+                                                          correct: !ans.correct,
+                                                        }
+                                                      : variant
+                                                ),
+                                            }
+                                          : qd
+                                      )
+                                    );
+                                  }}
+                                  type="button"
+                                  className=""
+                                >
+                                  {ans.correct ? (
+                                    <RadioChecked />
+                                  ) : (
+                                    <RadioEmpty />
+                                  )}
+                                </button>
+                              ) : (
+                                <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                                  <input
+                                    type="radio"
+                                    value={
+                                      questionsData[i].answervariants[j].text
+                                    }
+                                    name={`question${i + 1}OneAnswerOnly`}
+                                    onChange={() => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                correctAnswers: [
+                                                  `${questionsData[i].answervariants[j].text}`,
+                                                ],
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                    className="hidden"
+                                  ></input>
+                                  {questionsData[i].correctAnswers[0] ===
+                                  `${questionsData[i].answervariants[j].text}` ? (
+                                    <RadioChecked />
+                                  ) : (
+                                    <RadioEmpty />
+                                  )}
+                                </label>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -510,7 +554,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           onChange={(e) => {
                             setQuestionsData((prev) =>
                               prev.map((qd) =>
-                                qd.id === i
+                                qd.id === obj.id
                                   ? { ...qd, points: parseInt(e.target.value) }
                                   : qd
                               )

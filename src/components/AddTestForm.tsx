@@ -272,10 +272,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           }}
                           value={questionsData[i].description}
                         ></input>
-                        <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
-                          <input type="file" className="hidden"></input>
-                          Загрузить изображение
-                        </label>
                       </div>
                       <div className="flex flex-col gap-[12px]">
                         <p className="font-onest font-medium text-[20px]/[25.5px]">

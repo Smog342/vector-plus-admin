@@ -277,39 +277,93 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                       </div>
                       <div className="flex flex-col gap-[12px]">
                         <p className="font-onest font-medium text-[20px]/[25.5px]">
-                          Целевая аудтория
+                          Тип вопроса
                         </p>
                         <div className="flex gap-[24px] flex-wrap">
-                          <label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                             <input
                               type="radio"
                               value={"one"}
+                              className="hidden"
                               name={`question${i + 1}Type`}
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === i ? { ...qd, type: "one" } : qd
+                                  )
+                                );
+                              }}
                             ></input>
+                            {questionsData[i].type === "one" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
                             Один правильный вариант
                           </label>
-                          <label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                             <input
                               type="radio"
                               value={"open"}
+                              className="hidden"
                               name={`question${i + 1}Type`}
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === i ? { ...qd, type: "open" } : qd
+                                  )
+                                );
+                              }}
                             ></input>
+                            {questionsData[i].type === "open" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
                             Ввод текста
                           </label>
-                          <label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                             <input
                               type="radio"
                               value={"match"}
                               name={`question${i + 1}Type`}
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === i ? { ...qd, type: "match" } : qd
+                                  )
+                                );
+                              }}
+                              className="hidden"
                             ></input>
+                            {questionsData[i].type === "match" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
                             Сопоставление
                           </label>
-                          <label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
                             <input
                               type="radio"
                               value={"several"}
                               name={`question${i + 1}Type`}
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === i
+                                      ? { ...qd, type: "several" }
+                                      : qd
+                                  )
+                                );
+                              }}
+                              className="hidden"
                             ></input>
+                            {questionsData[i].type === "several" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
                             Несколько правильных вариантов
                           </label>
                         </div>

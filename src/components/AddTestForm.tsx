@@ -9,11 +9,20 @@ import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
 export const AddTestForm = (props: { type: SchoolType }) => {
   const dialog = useRef<HTMLDialogElement>(null);
   const [questionsNumber, setQuestionsNumber] = useState<number>(0);
+  const [questionsFieldValue, setQuestionsFieldValue] = useState<string>("");
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel | "">("");
   const [testName, setTestName] = useState<string>("");
   const [ratePhrase, setRatePhrase] = useState<string>("");
   const [questionsData, setQuestionsData] = useState<
-    { type: string; answervariants: string[]; correctAnswer: string }[]
+    {
+      id: number;
+      description: string;
+      type: string;
+      points: number;
+      answervariants: { id: number; images: { image: string }; text: string }[];
+      answerFieldValue: string;
+      correctAnswers: string[];
+    }[]
   >([]);
 
   const { pathname } = useLocation();
@@ -201,8 +210,9 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           num = 0;
                         }
                         setQuestionsNumber((_) => num);
+                        setQuestionsFieldValue(e.target.value);
                       }}
-                      value={questionsNumber}
+                      value={questionsFieldValue}
                     ></input>
                   </div>
                 </div>
@@ -212,10 +222,14 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     text="ПРОДОЛЖИТЬ"
                     onClick={() => {
                       setQuestionsData(
-                        Array.from({ length: questionsNumber }, () => ({
+                        Array.from({ length: questionsNumber }, (_, i) => ({
+                          id: i,
+                          description: "",
                           type: "",
+                          points: 0,
                           answervariants: [],
-                          correctAnswer: "",
+                          answerFieldValue: "",
+                          correctAnswers: [],
                         }))
                       );
                       console.log(questionsData);
@@ -240,6 +254,16 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         <input
                           className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
                           placeholder="Введите текст вопроса"
+                          onChange={(e) => {
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === i
+                                  ? { ...qd, description: e.target.value }
+                                  : qd
+                              )
+                            );
+                          }}
+                          value={questionsData[i].description}
                         ></input>
                         <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
                           <input type="file" className="hidden"></input>
@@ -292,7 +316,90 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         <input
                           className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
                           placeholder="Введите возможный вариант"
+                          onKeyUp={(e) => {
+                            e.preventDefault();
+                            if (e.code === "Enter") {
+                              setQuestionsData((prev) =>
+                                prev.map((qd, j) =>
+                                  qd.id === i
+                                    ? {
+                                        ...qd,
+                                        answerFieldValue: "",
+                                        answervariants: [
+                                          ...qd.answervariants,
+                                          {
+                                            id: qd.answervariants.length,
+                                            text: qd.answerFieldValue,
+                                            images: { image: "" },
+                                          },
+                                        ],
+                                      }
+                                    : qd
+                                )
+                              );
+                            }
+                            console.log(e.code);
+                          }}
+                          onChange={(e) => {
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === i
+                                  ? { ...qd, answerFieldValue: e.target.value }
+                                  : qd
+                              )
+                            );
+                          }}
+                          value={questionsData[i].answerFieldValue}
                         ></input>
+                        {questionsData[i].answervariants.map((ans, j) => (
+                          <div className="flex w-full" key={j}>
+                            <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                              {ans.text}
+                            </p>
+                            <div className="ml-auto">
+                              <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
+                                <input
+                                  type="file"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    var reader = new FileReader();
+                                    if (e.target.files) {
+                                      reader.readAsDataURL(e.target.files[0]);
+                                      reader.onload = () => {
+                                        console.log(reader.result);
+                                        setQuestionsData((prev) =>
+                                          prev.map((qd) =>
+                                            qd.id === i
+                                              ? {
+                                                  ...qd,
+                                                  answervariants:
+                                                    qd.answervariants.map(
+                                                      (ans) =>
+                                                        ans.id === j
+                                                          ? {
+                                                              ...ans,
+                                                              images: {
+                                                                image:
+                                                                  reader.result as string,
+                                                              },
+                                                            }
+                                                          : ans
+                                                    ),
+                                                }
+                                              : qd
+                                          )
+                                        );
+                                      };
+                                    } else {
+                                      console.log("Удаляем файл");
+                                    }
+                                  }}
+                                ></input>
+                                Загрузить изображение
+                              </label>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                       <div className="flex flex-col gap-[12px]">
                         <p className="font-onest font-medium text-[20px]/[25.5px]">
@@ -310,6 +417,16 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         <input
                           className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
                           placeholder="Введите балл за ответ"
+                          onChange={(e) => {
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === i
+                                  ? { ...qd, points: parseInt(e.target.value) }
+                                  : qd
+                              )
+                            );
+                          }}
+                          value={questionsData[i].points}
                         ></input>
                       </div>
                     </div>
@@ -366,29 +483,32 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     submit={false}
                     type="BLUE"
                     onClick={() => {
-                      addTest({
-                        title: testName,
-                        description: "",
-                        targetAudience: schoolLevel,
-                        organizationType: props.type,
-                        questions: [...Array(questionsNumber)].map((_, i) => ({
-                          questionNumber: i + 1,
-                          description: "Описание",
-                          points: 0,
-                          answerVariants: [],
-                          correctAnswers: [],
-                        })),
-                      }).then(() => {
-                        refetch().then(() => {
-                          setTestName("");
-                          setQuestionsNumber(0);
-                          setSchoolLevel("");
-                          setRatePhrase("");
-                          navigate("/admin/tests");
-                          dialog.current?.close();
-                        });
-                      });
+                      console.log(questionsData);
                     }}
+                    // onClick={() => {
+                    //   addTest({
+                    //     title: testName,
+                    //     description: "",
+                    //     targetAudience: schoolLevel,
+                    //     organizationType: props.type,
+                    //     questions: [...Array(questionsNumber)].map((_, i) => ({
+                    //       questionNumber: i + 1,
+                    //       description: "Описание",
+                    //       points: 0,
+                    //       answerVariants: [],
+                    //       correctAnswers: [],
+                    //     })),
+                    //   }).then(() => {
+                    //     refetch().then(() => {
+                    //       setTestName("");
+                    //       setQuestionsNumber(0);
+                    //       setSchoolLevel("");
+                    //       setRatePhrase("");
+                    //       navigate("/admin/tests");
+                    //       dialog.current?.close();
+                    //     });
+                    //   });
+                    // }}
                   />
                 </div>
               </>

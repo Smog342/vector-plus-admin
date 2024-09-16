@@ -28,7 +28,8 @@ export const AddTestForm = (props: { type: SchoolType }) => {
         correct: boolean;
       }[];
       answerFieldValue: string;
-      correctAnswers: string[];
+      correctAnswers: { id: string; text: string }[];
+      oneCorrectAnswer: string;
     }[]
   >([]);
 
@@ -237,6 +238,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           answervariants: [],
                           answerFieldValue: "",
                           correctAnswers: [],
+                          oneCorrectAnswer: "",
                         }))
                       );
                       console.log(questionsData);
@@ -372,195 +374,271 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           </label>
                         </div>
                       </div>
-                      <div className="flex flex-col gap-[12px]">
-                        <p className="font-onest font-medium text-[20px]/[25.5px]">
-                          Варианты ответов
-                        </p>
-                        <input
-                          className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                          placeholder="Введите возможный вариант"
-                          onKeyUp={(e) => {
-                            e.preventDefault();
-                            if (e.code === "Enter") {
+                      {questionsData[i].type === "several" ||
+                      questionsData[i].type === "one" ? (
+                        <div className="flex flex-col gap-[12px]">
+                          <p className="font-onest font-medium text-[20px]/[25.5px]">
+                            Варианты ответов
+                          </p>
+                          <input
+                            className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                            placeholder="Введите возможный вариант"
+                            onKeyUp={(e) => {
+                              e.preventDefault();
+                              if (e.code === "Enter") {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? {
+                                          ...qd,
+                                          answerFieldValue: "",
+                                          answervariants: [
+                                            ...qd.answervariants,
+                                            {
+                                              id: uuid(),
+                                              text: qd.answerFieldValue,
+                                              images: { image: "" },
+                                              correct: false,
+                                            },
+                                          ],
+                                        }
+                                      : qd
+                                  )
+                                );
+                              }
+                              console.log(e.code);
+                            }}
+                            onChange={(e) => {
                               setQuestionsData((prev) =>
                                 prev.map((qd) =>
                                   qd.id === obj.id
                                     ? {
                                         ...qd,
-                                        answerFieldValue: "",
-                                        answervariants: [
-                                          ...qd.answervariants,
-                                          {
-                                            id: uuid(),
-                                            text: qd.answerFieldValue,
-                                            images: { image: "" },
-                                            correct: false,
-                                          },
-                                        ],
+                                        answerFieldValue: e.target.value,
                                       }
                                     : qd
                                 )
                               );
-                            }
-                            console.log(e.code);
-                          }}
-                          onChange={(e) => {
-                            setQuestionsData((prev) =>
-                              prev.map((qd) =>
-                                qd.id === obj.id
-                                  ? { ...qd, answerFieldValue: e.target.value }
-                                  : qd
-                              )
-                            );
-                          }}
-                          value={questionsData[i].answerFieldValue}
-                        ></input>
-                        {questionsData[i].answervariants.map((ans, j) => (
-                          <div
-                            className="flex w-full items-center"
-                            key={ans.id}
-                          >
-                            <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
-                              {ans.text}
-                            </p>
-                            <div className="ml-auto flex gap-[8px]">
-                              <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
-                                <input
-                                  type="file"
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    var reader = new FileReader();
-                                    if (e.target.files) {
-                                      reader.readAsDataURL(e.target.files[0]);
-                                      reader.onload = () => {
-                                        console.log(reader.result);
+                            }}
+                            value={questionsData[i].answerFieldValue}
+                          ></input>
+                          {questionsData[i].answervariants.map((ans, j) => (
+                            <div
+                              className="flex w-full items-center"
+                              key={ans.id}
+                            >
+                              <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                                {ans.text}
+                              </p>
+                              <div className="ml-auto flex gap-[8px]">
+                                <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
+                                  <input
+                                    type="file"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      var reader = new FileReader();
+                                      if (e.target.files) {
+                                        reader.readAsDataURL(e.target.files[0]);
+                                        reader.onload = () => {
+                                          console.log(reader.result);
+                                          setQuestionsData((prev) =>
+                                            prev.map((qd) =>
+                                              qd.id === obj.id
+                                                ? {
+                                                    ...qd,
+                                                    answervariants:
+                                                      qd.answervariants.map(
+                                                        (variant) =>
+                                                          variant.id === ans.id
+                                                            ? {
+                                                                ...ans,
+                                                                images: {
+                                                                  image:
+                                                                    reader.result as string,
+                                                                },
+                                                              }
+                                                            : variant
+                                                      ),
+                                                  }
+                                                : qd
+                                            )
+                                          );
+                                        };
+                                      } else {
+                                        console.log("Удаляем файл");
+                                      }
+                                    }}
+                                  ></input>
+                                  Загрузить изображение
+                                </label>
+                                {questionsData[i].type === "several" ? (
+                                  <button
+                                    onClick={() => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                answervariants:
+                                                  qd.answervariants.map(
+                                                    (variant) =>
+                                                      variant.id === ans.id
+                                                        ? {
+                                                            ...ans,
+                                                            correct:
+                                                              !ans.correct,
+                                                          }
+                                                        : variant
+                                                  ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                    type="button"
+                                    className=""
+                                  >
+                                    {ans.correct ? (
+                                      <RadioChecked />
+                                    ) : (
+                                      <RadioEmpty />
+                                    )}
+                                  </button>
+                                ) : (
+                                  <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                                    <input
+                                      type="radio"
+                                      value={
+                                        questionsData[i].answervariants[j].text
+                                      }
+                                      name={`question${i + 1}OneAnswerOnly`}
+                                      onChange={() => {
                                         setQuestionsData((prev) =>
                                           prev.map((qd) =>
                                             qd.id === obj.id
                                               ? {
                                                   ...qd,
-                                                  answervariants:
-                                                    qd.answervariants.map(
-                                                      (variant) =>
-                                                        variant.id === ans.id
-                                                          ? {
-                                                              ...ans,
-                                                              images: {
-                                                                image:
-                                                                  reader.result as string,
-                                                              },
-                                                            }
-                                                          : variant
-                                                    ),
+                                                  oneCorrectAnswer: `${questionsData[i].answervariants[j].text}`,
                                                 }
                                               : qd
                                           )
                                         );
-                                      };
-                                    } else {
-                                      console.log("Удаляем файл");
-                                    }
-                                  }}
-                                ></input>
-                                Загрузить изображение
-                              </label>
-                              {questionsData[i].type === "several" ? (
+                                      }}
+                                      className="hidden"
+                                    ></input>
+                                    {questionsData[i].oneCorrectAnswer ===
+                                    `${questionsData[i].answervariants[j].text}` ? (
+                                      <RadioChecked />
+                                    ) : (
+                                      <RadioEmpty />
+                                    )}
+                                  </label>
+                                )}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            answervariants:
+                                              qd.answervariants.filter(
+                                                (variant) =>
+                                                  variant.id !== ans.id
+                                              ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                              >
+                                <DeleteIcon visible />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex flex-col gap-[12px]">
+                            <p className="font-onest font-medium text-[20px]/[25.5px]">
+                              Правильные ответы
+                            </p>
+                            <input
+                              className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                              placeholder="Введите правильный ответ"
+                              onKeyUp={(e) => {
+                                e.preventDefault();
+                                if (e.code === "Enter") {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            answerFieldValue: "",
+                                            correctAnswers: [
+                                              ...qd.correctAnswers,
+                                              {
+                                                id: uuid(),
+                                                text: qd.answerFieldValue,
+                                              },
+                                            ],
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }
+                                console.log(e.code);
+                              }}
+                              onChange={(e) => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? {
+                                          ...qd,
+                                          answerFieldValue: e.target.value,
+                                        }
+                                      : qd
+                                  )
+                                );
+                              }}
+                              value={questionsData[i].answerFieldValue}
+                            ></input>
+                            {questionsData[i].correctAnswers.map((ans) => (
+                              <div
+                                className="flex w-full items-center"
+                                key={ans.id}
+                              >
+                                <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                                  {ans.text}
+                                </p>
                                 <button
+                                  className="ml-auto"
+                                  type="button"
                                   onClick={() => {
                                     setQuestionsData((prev) =>
                                       prev.map((qd) =>
                                         qd.id === obj.id
                                           ? {
                                               ...qd,
-                                              answervariants:
-                                                qd.answervariants.map(
-                                                  (variant) =>
-                                                    variant.id === ans.id
-                                                      ? {
-                                                          ...ans,
-                                                          correct: !ans.correct,
-                                                        }
-                                                      : variant
+                                              correctAnswers:
+                                                qd.correctAnswers.filter(
+                                                  (cor) => cor.id !== ans.id
                                                 ),
                                             }
                                           : qd
                                       )
                                     );
                                   }}
-                                  type="button"
-                                  className=""
                                 >
-                                  {ans.correct ? (
-                                    <RadioChecked />
-                                  ) : (
-                                    <RadioEmpty />
-                                  )}
+                                  <DeleteIcon visible />
                                 </button>
-                              ) : (
-                                <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                                  <input
-                                    type="radio"
-                                    value={
-                                      questionsData[i].answervariants[j].text
-                                    }
-                                    name={`question${i + 1}OneAnswerOnly`}
-                                    onChange={() => {
-                                      setQuestionsData((prev) =>
-                                        prev.map((qd) =>
-                                          qd.id === obj.id
-                                            ? {
-                                                ...qd,
-                                                correctAnswers: [
-                                                  `${questionsData[i].answervariants[j].text}`,
-                                                ],
-                                              }
-                                            : qd
-                                        )
-                                      );
-                                    }}
-                                    className="hidden"
-                                  ></input>
-                                  {questionsData[i].correctAnswers[0] ===
-                                  `${questionsData[i].answervariants[j].text}` ? (
-                                    <RadioChecked />
-                                  ) : (
-                                    <RadioEmpty />
-                                  )}
-                                </label>
-                              )}
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setQuestionsData((prev) =>
-                                  prev.map((qd) =>
-                                    qd.id === obj.id
-                                      ? {
-                                          ...qd,
-                                          answervariants:
-                                            qd.answervariants.filter(
-                                              (variant) => variant.id !== ans.id
-                                            ),
-                                        }
-                                      : qd
-                                  )
-                                );
-                              }}
-                            >
-                              <DeleteIcon visible />
-                            </button>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                      <div className="flex flex-col gap-[12px]">
-                        <p className="font-onest font-medium text-[20px]/[25.5px]">
-                          Правильные ответы
-                        </p>
-                        <input
-                          className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                          placeholder="Введите правильный ответ"
-                        ></input>
-                      </div>
+                        </>
+                      )}
                       <div className="flex flex-col gap-[12px]">
                         <p className="font-onest font-medium text-[20px]/[25.5px]">
                           Балл за ответ

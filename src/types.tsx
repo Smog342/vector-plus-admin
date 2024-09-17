@@ -69,12 +69,14 @@ export type AddTestData = {
     questionNumber: number;
     description: string;
     points: number;
-    answerVariants: {
-      images: {
-        image: string;
-      }[];
-      text: string;
-    }[];
+    answerVariants:
+      | {
+          images: {
+            image: string;
+          }[];
+          text: string;
+        }[]
+      | null;
     correctAnswers: string[];
   }[];
 };

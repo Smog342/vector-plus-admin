@@ -655,7 +655,11 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               )
                             );
                           }}
-                          value={questionsData[i].points}
+                          value={
+                            Number.isNaN(questionsData[i].points)
+                              ? ""
+                              : questionsData[i].points
+                          }
                         ></input>
                       </div>
                     </div>
@@ -711,33 +715,51 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     text="СОХРАНИТЬ"
                     submit={false}
                     type="BLUE"
-                    onClick={() => {
-                      console.log(questionsData);
-                    }}
                     // onClick={() => {
-                    //   addTest({
-                    //     title: testName,
-                    //     description: "",
-                    //     targetAudience: schoolLevel,
-                    //     organizationType: props.type,
-                    //     questions: [...Array(questionsNumber)].map((_, i) => ({
-                    //       questionNumber: i + 1,
-                    //       description: "Описание",
-                    //       points: 0,
-                    //       answerVariants: [],
-                    //       correctAnswers: [],
-                    //     })),
-                    //   }).then(() => {
-                    //     refetch().then(() => {
-                    //       setTestName("");
-                    //       setQuestionsNumber(0);
-                    //       setSchoolLevel("");
-                    //       setRatePhrase("");
-                    //       navigate("/admin/tests");
-                    //       dialog.current?.close();
-                    //     });
-                    //   });
+                    //   console.log(questionsData);
                     // }}
+                    onClick={() => {
+                      addTest({
+                        title: testName,
+                        description: ratePhrase,
+                        targetAudience: schoolLevel,
+                        organizationType: props.type,
+                        questions: [...Array(questionsNumber)].map((_, i) => ({
+                          questionNumber: i + 1,
+                          description: questionsData[i].description,
+                          points: questionsData[i].points,
+                          answerVariants:
+                            questionsData[i].type === "several" ||
+                            questionsData[i].type === "one"
+                              ? questionsData[i].answervariants.map(
+                                  ({ id, correct, ...ans }) => ({
+                                    ...ans,
+                                    images: [{ image: ans.images.image }],
+                                  })
+                                )
+                              : null,
+                          correctAnswers:
+                            questionsData[i].type === "several"
+                              ? questionsData[i].answervariants
+                                  .filter((ans) => ans.correct)
+                                  .map((ans) => ans.text)
+                              : questionsData[i].type === "one"
+                              ? [questionsData[i].oneCorrectAnswer]
+                              : questionsData[i].correctAnswers.map(
+                                  (cor) => cor.text
+                                ),
+                        })),
+                      }).then(() => {
+                        refetch().then(() => {
+                          setTestName("");
+                          setQuestionsNumber(0);
+                          setSchoolLevel("");
+                          setRatePhrase("");
+                          navigate("/admin/tests");
+                          dialog.current?.close();
+                        });
+                      });
+                    }}
                   />
                 </div>
               </>

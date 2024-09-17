@@ -23,7 +23,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
       points: number;
       answervariants: {
         id: string;
-        images: { image: string };
+        images: { image: string }[];
         text: string;
         correct: boolean;
       }[];
@@ -397,7 +397,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                             {
                                               id: uuid(),
                                               text: qd.answerFieldValue,
-                                              images: { image: "" },
+                                              images: [],
                                               correct: false,
                                             },
                                           ],
@@ -452,10 +452,12 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                                           variant.id === ans.id
                                                             ? {
                                                                 ...ans,
-                                                                images: {
-                                                                  image:
-                                                                    reader.result as string,
-                                                                },
+                                                                images: [
+                                                                  {
+                                                                    image:
+                                                                      reader.result as string,
+                                                                  },
+                                                                ],
                                                               }
                                                             : variant
                                                       ),
@@ -715,9 +717,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     text="СОХРАНИТЬ"
                     submit={false}
                     type="BLUE"
-                    // onClick={() => {
-                    //   console.log(questionsData);
-                    // }}
                     onClick={() => {
                       addTest({
                         title: testName,
@@ -734,7 +733,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               ? questionsData[i].answervariants.map(
                                   ({ id, correct, ...ans }) => ({
                                     ...ans,
-                                    images: [{ image: ans.images.image }],
                                   })
                                 )
                               : null,
@@ -755,6 +753,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           setQuestionsNumber(0);
                           setSchoolLevel("");
                           setRatePhrase("");
+                          setQuestionsFieldValue("");
                           navigate("/admin/tests");
                           dialog.current?.close();
                         });

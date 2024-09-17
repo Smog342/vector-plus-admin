@@ -230,7 +230,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     text="ПРОДОЛЖИТЬ"
                     onClick={() => {
                       setQuestionsData(
-                        Array.from({ length: questionsNumber }, (_, i) => ({
+                        Array.from({ length: questionsNumber }, () => ({
                           id: uuid(),
                           description: "",
                           type: "one",

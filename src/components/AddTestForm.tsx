@@ -724,6 +724,14 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         targetAudience: schoolLevel,
                         organizationType: props.type,
                         questions: [...Array(questionsNumber)].map((_, i) => ({
+                          questionType:
+                            questionsData[i].type === "one"
+                              ? "ONE_SELECT"
+                              : questionsData[i].type === "several"
+                              ? "MANY_SELECT"
+                              : questionsData[i].type === "open"
+                              ? "INPUT"
+                              : "MATCH",
                           questionNumber: i + 1,
                           description: questionsData[i].description,
                           points: questionsData[i].points,

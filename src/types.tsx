@@ -67,6 +67,7 @@ export type AddTestData = {
   organizationType: string;
   questions: {
     questionNumber: number;
+    questionType: "ONE_SELECT" | "MANY_SELECT" | "INPUT" | "MATCH";
     description: string;
     points: number;
     answerVariants:

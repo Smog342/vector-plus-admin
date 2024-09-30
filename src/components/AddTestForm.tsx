@@ -431,48 +431,36 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                 {ans.text}
                               </p>
                               <div className="ml-auto flex gap-[8px]">
-                                <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
-                                  <input
-                                    type="file"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                      var reader = new FileReader();
-                                      if (e.target.files) {
-                                        reader.readAsDataURL(e.target.files[0]);
-                                        reader.onload = () => {
-                                          console.log(reader.result);
-                                          setQuestionsData((prev) =>
-                                            prev.map((qd) =>
-                                              qd.id === obj.id
-                                                ? {
-                                                    ...qd,
-                                                    answervariants:
-                                                      qd.answervariants.map(
-                                                        (variant) =>
-                                                          variant.id === ans.id
-                                                            ? {
-                                                                ...ans,
-                                                                images: [
-                                                                  {
-                                                                    image:
-                                                                      reader.result as string,
-                                                                  },
-                                                                ],
-                                                              }
-                                                            : variant
-                                                      ),
-                                                  }
-                                                : qd
-                                            )
-                                          );
-                                        };
-                                      } else {
-                                        console.log("Удаляем файл");
-                                      }
-                                    }}
-                                  ></input>
-                                  Загрузить изображение
-                                </label>
+                                <input
+                                  placeholder="Ссылка на изображение"
+                                  className=""
+                                  onChange={(e) => {
+                                    setQuestionsData((prev) =>
+                                      prev.map((qd) =>
+                                        qd.id === obj.id
+                                          ? {
+                                              ...qd,
+                                              answervariants:
+                                                qd.answervariants.map(
+                                                  (variant) =>
+                                                    variant.id === ans.id
+                                                      ? {
+                                                          ...ans,
+                                                          images: [
+                                                            {
+                                                              image:
+                                                                e.target.value,
+                                                            },
+                                                          ],
+                                                        }
+                                                      : variant
+                                                ),
+                                            }
+                                          : qd
+                                      )
+                                    );
+                                  }}
+                                ></input>
                                 {questionsData[i].type === "several" ? (
                                   <button
                                     onClick={() => {

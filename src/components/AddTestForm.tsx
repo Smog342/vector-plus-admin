@@ -7,6 +7,7 @@ import { SchoolLevel, SchoolType } from "../types";
 import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
 import uuid from "react-uuid";
 import { DeleteIcon } from "../icons/DeleteIcon";
+import { Modal, Form, Input, Radio } from "antd";
 
 export const AddTestForm = (props: { type: SchoolType }) => {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -44,6 +45,8 @@ export const AddTestForm = (props: { type: SchoolType }) => {
     }
   };
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
   const [addTest] = useCreateTestMutation();
   const { refetch } = useGetTestsQuery();
 
@@ -56,12 +59,679 @@ export const AddTestForm = (props: { type: SchoolType }) => {
 
   return (
     <>
+      <Modal
+        className="!w-[768px]"
+        open={isModalOpen}
+        footer={false}
+        onCancel={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        {pathname === "/admin/tests" ? (
+          <Form
+            onFinish={(values) => {
+              console.log(values);
+              setQuestionsData(
+                Array.from({ length: questionsNumber }, () => ({
+                  id: uuid(),
+                  description: "",
+                  type: "one",
+                  points: 0,
+                  answervariants: [],
+                  answerFieldValue: "",
+                  correctAnswers: [],
+                  oneCorrectAnswer: "",
+                }))
+              );
+              navigate("/admin/tests/1");
+            }}
+            layout="vertical"
+            className="flex flex-col gap-[32px]"
+          >
+            <>
+              <p className="mr-auto font-onest font-bold text-[28px]/[35.7px]">
+                Добавить тест
+              </p>
+              <div className="flex flex-col gap-[24px]">
+                <div className="flex flex-col gap-[12px]">
+                  <p className="font-onest font-medium text-[20px]/[25.5px]">
+                    Название теста
+                  </p>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name={"testName"}
+                    rules={[
+                      { required: true, message: "Не введено название теста" },
+                    ]}
+                  >
+                    <Input
+                      className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                      placeholder="Введите название теста"
+                      value={testName}
+                      onChange={(e) => {
+                        setTestName(e.target.value);
+                      }}
+                    ></Input>
+                  </Form.Item>
+                </div>
+                {props.type === "SCHOOL" ? (
+                  <div className="flex flex-col gap-[12px]">
+                    <p className="font-onest font-medium text-[20px]/[25.5px]">
+                      Целевая аудитория
+                    </p>
+                    <div>
+                      <Form.Item
+                        style={{ marginBottom: 0 }}
+                        name={"schoolLevel"}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Не выбрана целевая аудитория",
+                          },
+                        ]}
+                      >
+                        <Radio.Group
+                          className="flex gap-[24px]"
+                          name="schoolLevel"
+                          onChange={(e) =>
+                            setSchoolLevel(e.target.value as SchoolLevel)
+                          }
+                        >
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              type="radio"
+                              value={"JUNIOR"}
+                              className="hidden"
+                            ></Radio>
+                            {schoolLevel === "JUNIOR" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            1-4 класс
+                          </label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              type="radio"
+                              value={"MIDDLE"}
+                              className="hidden"
+                            ></Radio>
+                            {schoolLevel === "MIDDLE" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            5-9 класс
+                          </label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              type="radio"
+                              value={"HIGHSCHOOL"}
+                              className="hidden"
+                            ></Radio>
+                            {schoolLevel === "HIGHSCHOOL" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            10-11 класс
+                          </label>
+                        </Radio.Group>
+                      </Form.Item>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex gap-[24px]">
+                    <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                      <input
+                        type="radio"
+                        value={"GROUP 1"}
+                        name="schoolLevel"
+                        className="hidden"
+                        onChange={(e) =>
+                          setSchoolLevel(e.target.value as SchoolLevel)
+                        }
+                      ></input>
+                      {schoolLevel === "GROUP 1" ? (
+                        <RadioChecked />
+                      ) : (
+                        <RadioEmpty />
+                      )}
+                      1 группа
+                    </label>
+                    <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                      <input
+                        type="radio"
+                        value={"GROUP 2"}
+                        name="schoolLevel"
+                        className="hidden"
+                        onChange={(e) =>
+                          setSchoolLevel(e.target.value as SchoolLevel)
+                        }
+                      ></input>
+                      {schoolLevel === "GROUP 2" ? (
+                        <RadioChecked />
+                      ) : (
+                        <RadioEmpty />
+                      )}
+                      2 группа
+                    </label>
+                    <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                      <input
+                        type="radio"
+                        value={"GROUP 3"}
+                        name="schoolLevel"
+                        className="hidden"
+                        onChange={(e) =>
+                          setSchoolLevel(e.target.value as SchoolLevel)
+                        }
+                      ></input>
+                      {schoolLevel === "GROUP 3" ? (
+                        <RadioChecked />
+                      ) : (
+                        <RadioEmpty />
+                      )}
+                      3 группа
+                    </label>
+                  </div>
+                )}
+                <div className="flex flex-col gap-[12px]">
+                  <p className="font-onest font-medium text-[20px]/[25.5px]">
+                    Количество вопросов
+                  </p>
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    name={"questionsNumber"}
+                    rules={[
+                      { required: true, message: "Не введено число вопросов" },
+                      {
+                        pattern: /^\d+$/,
+                        message: "Некорректный ввод",
+                      },
+                    ]}
+                  >
+                    <Input
+                      className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                      placeholder="Введите количество вопросов"
+                      onChange={(e) => {
+                        let num = parseInt(e.target.value);
+                        if (Number.isNaN(num) || num < 0) {
+                          num = 0;
+                        }
+                        setQuestionsNumber((_) => num);
+                        setQuestionsFieldValue(e.target.value);
+                      }}
+                      value={questionsFieldValue}
+                    ></Input>
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="mx-auto">
+                <CustomButton
+                  type="BLUE"
+                  text="ПРОДОЛЖИТЬ"
+                  onClick={() => {}}
+                  submit={true}
+                />
+              </div>
+            </>
+          </Form>
+        ) : pathname === "/admin/tests/1" ? (
+          <Form
+            onFinish={(values) => {
+              console.log(values);
+              navigate("/admin/tests/1");
+            }}
+            layout="vertical"
+            className="flex flex-col gap-[32px]"
+            scrollToFirstError={{ behavior: "smooth" }}
+          >
+            <>
+              {questionsData.map((obj, i) => (
+                <>
+                  <p className="mr-auto font-onest font-bold text-[28px]/[35.7px]">
+                    {"Вопрос " + (i + 1)}
+                  </p>
+                  <div className="flex flex-col gap-[24px]">
+                    <div className="flex flex-col gap-[12px]">
+                      <p className="font-onest font-medium text-[20px]/[25.5px]">
+                        Текст вопроса
+                      </p>
+                      <Form.Item
+                        style={{ marginBottom: 0 }}
+                        name={`question${i + 1}Text`}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Не введена формулировка вопроса",
+                          },
+                        ]}
+                      >
+                        <Input
+                          className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB] scroll-m-[32px]"
+                          placeholder="Введите текст вопроса"
+                          onChange={(e) => {
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === obj.id
+                                  ? { ...qd, description: e.target.value }
+                                  : qd
+                              )
+                            );
+                          }}
+                          value={questionsData[i].description}
+                        ></Input>
+                      </Form.Item>
+                    </div>
+                    <div className="flex flex-col gap-[12px]">
+                      <p className="font-onest font-medium text-[20px]/[25.5px]">
+                        Тип вопроса
+                      </p>
+                      <div className="flex gap-[24px] flex-wrap">
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"one"}
+                            className="hidden"
+                            name={`question${i + 1}Type`}
+                            onChange={() => {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id ? { ...qd, type: "one" } : qd
+                                )
+                              );
+                            }}
+                          ></input>
+                          {questionsData[i].type === "one" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          Один правильный вариант
+                        </label>
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"open"}
+                            className="hidden"
+                            name={`question${i + 1}Type`}
+                            onChange={() => {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? { ...qd, type: "open" }
+                                    : qd
+                                )
+                              );
+                            }}
+                          ></input>
+                          {questionsData[i].type === "open" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          Ввод текста
+                        </label>
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"match"}
+                            name={`question${i + 1}Type`}
+                            onChange={() => {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? { ...qd, type: "match" }
+                                    : qd
+                                )
+                              );
+                            }}
+                            className="hidden"
+                          ></input>
+                          {questionsData[i].type === "match" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          Сопоставление
+                        </label>
+                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                          <input
+                            type="radio"
+                            value={"several"}
+                            name={`question${i + 1}Type`}
+                            onChange={() => {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? { ...qd, type: "several" }
+                                    : qd
+                                )
+                              );
+                            }}
+                            className="hidden"
+                          ></input>
+                          {questionsData[i].type === "several" ? (
+                            <RadioChecked />
+                          ) : (
+                            <RadioEmpty />
+                          )}
+                          Несколько правильных вариантов
+                        </label>
+                      </div>
+                    </div>
+                    {questionsData[i].type === "several" ||
+                    questionsData[i].type === "one" ? (
+                      <div className="flex flex-col gap-[12px]">
+                        <p className="font-onest font-medium text-[20px]/[25.5px]">
+                          Варианты ответов
+                        </p>
+                        <input
+                          className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                          placeholder="Введите возможный вариант"
+                          onKeyUp={(e) => {
+                            e.preventDefault();
+                            if (e.code === "Enter") {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? {
+                                        ...qd,
+                                        answerFieldValue: "",
+                                        answervariants: [
+                                          ...qd.answervariants,
+                                          {
+                                            id: uuid(),
+                                            text: qd.answerFieldValue,
+                                            images: [],
+                                            correct: false,
+                                          },
+                                        ],
+                                      }
+                                    : qd
+                                )
+                              );
+                            }
+                            console.log(e.code);
+                          }}
+                          onChange={(e) => {
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === obj.id
+                                  ? {
+                                      ...qd,
+                                      answerFieldValue: e.target.value,
+                                    }
+                                  : qd
+                              )
+                            );
+                          }}
+                          value={questionsData[i].answerFieldValue}
+                        ></input>
+                        {questionsData[i].answervariants.map((ans, j) => (
+                          <div
+                            className="flex w-full items-center"
+                            key={ans.id}
+                          >
+                            <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                              {ans.text}
+                            </p>
+                            <div className="ml-auto flex gap-[8px]">
+                              <input
+                                placeholder="Ссылка на изображение"
+                                className=""
+                                onChange={(e) => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            answervariants:
+                                              qd.answervariants.map((variant) =>
+                                                variant.id === ans.id
+                                                  ? {
+                                                      ...ans,
+                                                      images: [
+                                                        {
+                                                          image: e.target.value,
+                                                        },
+                                                      ],
+                                                    }
+                                                  : variant
+                                              ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                              ></input>
+                              {questionsData[i].type === "several" ? (
+                                <button
+                                  onClick={() => {
+                                    setQuestionsData((prev) =>
+                                      prev.map((qd) =>
+                                        qd.id === obj.id
+                                          ? {
+                                              ...qd,
+                                              answervariants:
+                                                qd.answervariants.map(
+                                                  (variant) =>
+                                                    variant.id === ans.id
+                                                      ? {
+                                                          ...ans,
+                                                          correct: !ans.correct,
+                                                        }
+                                                      : variant
+                                                ),
+                                            }
+                                          : qd
+                                      )
+                                    );
+                                  }}
+                                  type="button"
+                                  className=""
+                                >
+                                  {ans.correct ? (
+                                    <RadioChecked />
+                                  ) : (
+                                    <RadioEmpty />
+                                  )}
+                                </button>
+                              ) : (
+                                <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                                  <input
+                                    type="radio"
+                                    value={
+                                      questionsData[i].answervariants[j].text
+                                    }
+                                    name={`question${i + 1}OneAnswerOnly`}
+                                    onChange={() => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                oneCorrectAnswer: `${questionsData[i].answervariants[j].text}`,
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                    className="hidden"
+                                  ></input>
+                                  {questionsData[i].oneCorrectAnswer ===
+                                  `${questionsData[i].answervariants[j].text}` ? (
+                                    <RadioChecked />
+                                  ) : (
+                                    <RadioEmpty />
+                                  )}
+                                </label>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? {
+                                          ...qd,
+                                          answervariants:
+                                            qd.answervariants.filter(
+                                              (variant) => variant.id !== ans.id
+                                            ),
+                                        }
+                                      : qd
+                                  )
+                                );
+                              }}
+                            >
+                              <DeleteIcon visible />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-col gap-[12px]">
+                          <p className="font-onest font-medium text-[20px]/[25.5px]">
+                            Правильные ответы
+                          </p>
+                          <input
+                            className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                            placeholder="Введите правильный ответ"
+                            onKeyUp={(e) => {
+                              e.preventDefault();
+                              if (e.code === "Enter") {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? {
+                                          ...qd,
+                                          answerFieldValue: "",
+                                          correctAnswers: [
+                                            ...qd.correctAnswers,
+                                            {
+                                              id: uuid(),
+                                              text: qd.answerFieldValue,
+                                            },
+                                          ],
+                                        }
+                                      : qd
+                                  )
+                                );
+                              }
+                              console.log(e.code);
+                            }}
+                            onChange={(e) => {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? {
+                                        ...qd,
+                                        answerFieldValue: e.target.value,
+                                      }
+                                    : qd
+                                )
+                              );
+                            }}
+                            value={questionsData[i].answerFieldValue}
+                          ></input>
+                          {questionsData[i].correctAnswers.map((ans) => (
+                            <div
+                              className="flex w-full items-center"
+                              key={ans.id}
+                            >
+                              <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                                {ans.text}
+                              </p>
+                              <button
+                                className="ml-auto"
+                                type="button"
+                                onClick={() => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            correctAnswers:
+                                              qd.correctAnswers.filter(
+                                                (cor) => cor.id !== ans.id
+                                              ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                              >
+                                <DeleteIcon visible />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    <div className="flex flex-col gap-[12px]">
+                      <p className="font-onest font-medium text-[20px]/[25.5px]">
+                        Балл за ответ
+                      </p>
+                      <input
+                        className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
+                        placeholder="Введите балл за ответ"
+                        onChange={(e) => {
+                          setQuestionsData((prev) =>
+                            prev.map((qd) =>
+                              qd.id === obj.id
+                                ? { ...qd, points: parseInt(e.target.value) }
+                                : qd
+                            )
+                          );
+                        }}
+                        value={
+                          Number.isNaN(questionsData[i].points)
+                            ? ""
+                            : questionsData[i].points
+                        }
+                      ></input>
+                    </div>
+                  </div>
+                </>
+              ))}
+              <div className="mt-auto mx-auto flex gap-[32px]">
+                <CustomButton
+                  text="ВЕРНУТЬСЯ"
+                  submit={false}
+                  type="WHITE"
+                  onClick={() => {
+                    navigate("/admin/tests");
+                  }}
+                />
+                <CustomButton
+                  text="СОХРАНИТЬ"
+                  submit={true}
+                  type="BLUE"
+                  onClick={() => {}}
+                />
+              </div>
+            </>
+          </Form>
+        ) : (
+          <Form
+            onFinish={(values) => {
+              console.log(values);
+              navigate("/admin/tests/1");
+            }}
+            layout="vertical"
+            className="flex flex-col gap-[32px]"
+          ></Form>
+        )}
+      </Modal>
       <div className="mx-auto">
         <CustomButton
           text="ДОБАВИТЬ ТЕСТ"
           type="BLUE"
           onClick={() => {
-            dialog.current?.showModal();
+            setIsModalOpen(true);
           }}
           submit={false}
         />
@@ -711,38 +1381,11 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         description: ratePhrase,
                         targetAudience: schoolLevel,
                         organizationType: props.type,
-                        questions: [...Array(questionsNumber)].map((_, i) => ({
-                          questionType:
-                            questionsData[i].type === "one"
-                              ? "ONE_SELECT"
-                              : questionsData[i].type === "several"
-                              ? "MANY_SELECT"
-                              : questionsData[i].type === "open"
-                              ? "INPUT"
-                              : "MATCH",
-                          questionNumber: i + 1,
-                          description: questionsData[i].description,
-                          points: questionsData[i].points,
-                          answerVariants:
-                            questionsData[i].type === "several" ||
-                            questionsData[i].type === "one"
-                              ? questionsData[i].answervariants.map(
-                                  ({ id, correct, ...ans }) => ({
-                                    ...ans,
-                                  })
-                                )
-                              : null,
-                          correctAnswers:
-                            questionsData[i].type === "several"
-                              ? questionsData[i].answervariants
-                                  .filter((ans) => ans.correct)
-                                  .map((ans) => ans.text)
-                              : questionsData[i].type === "one"
-                              ? [questionsData[i].oneCorrectAnswer]
-                              : questionsData[i].correctAnswers.map(
-                                  (cor) => cor.text
-                                ),
-                        })),
+                        pointsRating: [],
+                        oneSelectedAnswerQuestions: [],
+                        manySelectedAnswerQuestions: [],
+                        inputQuestions: [],
+                        matchQuestions: [],
                       }).then(() => {
                         refetch().then(() => {
                           setTestName("");

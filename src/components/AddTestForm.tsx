@@ -26,10 +26,12 @@ export const AddTestForm = (props: { type: SchoolType }) => {
         id: string;
         images: { image: string }[];
         text: string;
+        variantNumber: number;
         correct: boolean;
+        points: number;
       }[];
       answerFieldValue: string;
-      correctAnswers: { id: string; text: string }[];
+      correctAnswers: { id: string; text: string; points: number }[];
       oneCorrectAnswer: string;
     }[]
   >([]);
@@ -279,8 +281,11 @@ export const AddTestForm = (props: { type: SchoolType }) => {
         ) : pathname === "/admin/tests/1" ? (
           <Form
             onFinish={(values) => {
-              console.log(values);
-              navigate("/admin/tests/1");
+              //console.log(values);
+              console.log(questionsData);
+            }}
+            onKeyDown={(e) => {
+              e.key === "Enter" && e.preventDefault();
             }}
             layout="vertical"
             className="flex flex-col gap-[32px]"
@@ -327,98 +332,100 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                       <p className="font-onest font-medium text-[20px]/[25.5px]">
                         Тип вопроса
                       </p>
-                      <div className="flex gap-[24px] flex-wrap">
-                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                          <input
-                            type="radio"
-                            value={"one"}
-                            className="hidden"
-                            name={`question${i + 1}Type`}
-                            onChange={() => {
-                              setQuestionsData((prev) =>
-                                prev.map((qd) =>
-                                  qd.id === obj.id ? { ...qd, type: "one" } : qd
-                                )
-                              );
-                            }}
-                          ></input>
-                          {questionsData[i].type === "one" ? (
-                            <RadioChecked />
-                          ) : (
-                            <RadioEmpty />
-                          )}
-                          Один правильный вариант
-                        </label>
-                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                          <input
-                            type="radio"
-                            value={"open"}
-                            className="hidden"
-                            name={`question${i + 1}Type`}
-                            onChange={() => {
-                              setQuestionsData((prev) =>
-                                prev.map((qd) =>
-                                  qd.id === obj.id
-                                    ? { ...qd, type: "open" }
-                                    : qd
-                                )
-                              );
-                            }}
-                          ></input>
-                          {questionsData[i].type === "open" ? (
-                            <RadioChecked />
-                          ) : (
-                            <RadioEmpty />
-                          )}
-                          Ввод текста
-                        </label>
-                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                          <input
-                            type="radio"
-                            value={"match"}
-                            name={`question${i + 1}Type`}
-                            onChange={() => {
-                              setQuestionsData((prev) =>
-                                prev.map((qd) =>
-                                  qd.id === obj.id
-                                    ? { ...qd, type: "match" }
-                                    : qd
-                                )
-                              );
-                            }}
-                            className="hidden"
-                          ></input>
-                          {questionsData[i].type === "match" ? (
-                            <RadioChecked />
-                          ) : (
-                            <RadioEmpty />
-                          )}
-                          Сопоставление
-                        </label>
-                        <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                          <input
-                            type="radio"
-                            value={"several"}
-                            name={`question${i + 1}Type`}
-                            onChange={() => {
-                              setQuestionsData((prev) =>
-                                prev.map((qd) =>
-                                  qd.id === obj.id
-                                    ? { ...qd, type: "several" }
-                                    : qd
-                                )
-                              );
-                            }}
-                            className="hidden"
-                          ></input>
-                          {questionsData[i].type === "several" ? (
-                            <RadioChecked />
-                          ) : (
-                            <RadioEmpty />
-                          )}
-                          Несколько правильных вариантов
-                        </label>
-                      </div>
+                      <Form.Item
+                        style={{ marginBottom: 0 }}
+                        name={`question${i + 1}Type`}
+                      >
+                        <Radio.Group
+                          className="flex gap-[24px] flex-wrap"
+                          name={`question${i + 1}Type`}
+                        >
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              value={"one"}
+                              className="hidden"
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "one" }
+                                      : qd
+                                  )
+                                );
+                              }}
+                            ></Radio>
+                            {questionsData[i].type === "one" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            Один правильный вариант
+                          </label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              value={"open"}
+                              className="hidden"
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "open" }
+                                      : qd
+                                  )
+                                );
+                              }}
+                            ></Radio>
+                            {questionsData[i].type === "open" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            Ввод текста
+                          </label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              value={"match"}
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "match" }
+                                      : qd
+                                  )
+                                );
+                              }}
+                              className="hidden"
+                            ></Radio>
+                            {questionsData[i].type === "match" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            Сопоставление
+                          </label>
+                          <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                            <Radio
+                              value={"several"}
+                              onChange={() => {
+                                setQuestionsData((prev) =>
+                                  prev.map((qd) =>
+                                    qd.id === obj.id
+                                      ? { ...qd, type: "several" }
+                                      : qd
+                                  )
+                                );
+                              }}
+                              className="hidden"
+                            ></Radio>
+                            {questionsData[i].type === "several" ? (
+                              <RadioChecked />
+                            ) : (
+                              <RadioEmpty />
+                            )}
+                            Несколько правильных вариантов
+                          </label>
+                        </Radio.Group>
+                      </Form.Item>
                     </div>
                     {questionsData[i].type === "several" ||
                     questionsData[i].type === "one" ? (
@@ -426,33 +433,40 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         <p className="font-onest font-medium text-[20px]/[25.5px]">
                           Варианты ответов
                         </p>
-                        <input
+                        <Input
                           className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
                           placeholder="Введите возможный вариант"
-                          onKeyUp={(e) => {
-                            e.preventDefault();
-                            if (e.code === "Enter") {
-                              setQuestionsData((prev) =>
-                                prev.map((qd) =>
-                                  qd.id === obj.id
-                                    ? {
-                                        ...qd,
-                                        answerFieldValue: "",
-                                        answervariants: [
-                                          ...qd.answervariants,
-                                          {
-                                            id: uuid(),
-                                            text: qd.answerFieldValue,
-                                            images: [],
-                                            correct: false,
-                                          },
-                                        ],
-                                      }
-                                    : qd
-                                )
-                              );
-                            }
-                            console.log(e.code);
+                          onPressEnter={() => {
+                            console.log("Hello");
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === obj.id
+                                  ? {
+                                      ...qd,
+                                      answerFieldValue: "",
+                                      answervariants: [
+                                        ...qd.answervariants,
+                                        {
+                                          id: uuid(),
+                                          text: qd.answerFieldValue,
+                                          images: [],
+                                          correct: false,
+                                          points: 0,
+                                          variantNumber:
+                                            qd.answervariants.length === 0
+                                              ? 0
+                                              : Math.max(
+                                                  ...qd.answervariants.map(
+                                                    (ansvar) =>
+                                                      ansvar.variantNumber
+                                                  )
+                                                ) + 1,
+                                        },
+                                      ],
+                                    }
+                                  : qd
+                              )
+                            );
                           }}
                           onChange={(e) => {
                             setQuestionsData((prev) =>
@@ -467,46 +481,185 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                             );
                           }}
                           value={questionsData[i].answerFieldValue}
-                        ></input>
-                        {questionsData[i].answervariants.map((ans, j) => (
-                          <div
-                            className="flex w-full items-center"
-                            key={ans.id}
-                          >
-                            <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
-                              {ans.text}
-                            </p>
-                            <div className="ml-auto flex gap-[8px]">
-                              <input
-                                placeholder="Ссылка на изображение"
-                                className=""
-                                onChange={(e) => {
-                                  setQuestionsData((prev) =>
-                                    prev.map((qd) =>
-                                      qd.id === obj.id
-                                        ? {
-                                            ...qd,
-                                            answervariants:
-                                              qd.answervariants.map((variant) =>
-                                                variant.id === ans.id
-                                                  ? {
-                                                      ...ans,
-                                                      images: [
-                                                        {
-                                                          image: e.target.value,
-                                                        },
-                                                      ],
-                                                    }
-                                                  : variant
-                                              ),
-                                          }
-                                        : qd
+                        ></Input>
+                        <div>
+                          <Form.Item
+                            style={{ marginBottom: 0 }}
+                            name={`question${i + 1}Answers`}
+                            rules={[
+                              () => ({
+                                validator() {
+                                  if (
+                                    questionsData[i].answervariants.length !== 0
+                                  ) {
+                                    return Promise.resolve();
+                                  }
+                                  return Promise.reject(
+                                    new Error(
+                                      "Должен быть хотя бы один вариант ответа"
                                     )
                                   );
-                                }}
-                              ></input>
-                              {questionsData[i].type === "several" ? (
+                                },
+                              }),
+                            ]}
+                          >
+                            <div className="h-[1px] scroll-m-[114px]"></div>
+                            {questionsData[i].answervariants.map((ans, j) => (
+                              <div
+                                className="flex w-full items-center"
+                                key={ans.id}
+                              >
+                                <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                                  {ans.text}
+                                </p>
+                                <div className="ml-auto flex gap-[8px]">
+                                  <input
+                                    placeholder="Ссылка на изображение"
+                                    className=""
+                                    onChange={(e) => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                answervariants:
+                                                  qd.answervariants.map(
+                                                    (variant) =>
+                                                      variant.id === ans.id
+                                                        ? {
+                                                            ...ans,
+                                                            images: [
+                                                              {
+                                                                image:
+                                                                  e.target
+                                                                    .value,
+                                                              },
+                                                            ],
+                                                          }
+                                                        : variant
+                                                  ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                  ></input>
+                                  {/* {questionsData[i].type === "several" ? (
+                                    <button
+                                      onClick={() => {
+                                        setQuestionsData((prev) =>
+                                          prev.map((qd) =>
+                                            qd.id === obj.id
+                                              ? {
+                                                  ...qd,
+                                                  answervariants:
+                                                    qd.answervariants.map(
+                                                      (variant) =>
+                                                        variant.id === ans.id
+                                                          ? {
+                                                              ...ans,
+                                                              correct:
+                                                                !ans.correct,
+                                                            }
+                                                          : variant
+                                                    ),
+                                                }
+                                              : qd
+                                          )
+                                        );
+                                      }}
+                                      type="button"
+                                      className=""
+                                    >
+                                      {ans.correct ? (
+                                        <RadioChecked />
+                                      ) : (
+                                        <RadioEmpty />
+                                      )}
+                                    </button>
+                                  ) : (
+                                    <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
+                                      <input
+                                        type="radio"
+                                        value={
+                                          questionsData[i].answervariants[j]
+                                            .text
+                                        }
+                                        name={`question${i + 1}OneAnswerOnly`}
+                                        onChange={() => {
+                                          setQuestionsData((prev) =>
+                                            prev.map((qd) =>
+                                              qd.id === obj.id
+                                                ? {
+                                                    ...qd,
+                                                    oneCorrectAnswer: `${questionsData[i].answervariants[j].text}`,
+                                                  }
+                                                : qd
+                                            )
+                                          );
+                                        }}
+                                        className="hidden"
+                                      ></input>
+                                      {questionsData[i].oneCorrectAnswer ===
+                                      `${questionsData[i].answervariants[j].text}` ? (
+                                        <RadioChecked />
+                                      ) : (
+                                        <RadioEmpty />
+                                      )}
+                                    </label>
+                                  )} */}
+                                </div>
+                                <Form.Item
+                                  style={{ margin: 0 }}
+                                  name={`question${i + 1}Ans${
+                                    ans.variantNumber
+                                  }Point`}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Не указан балл за ответ",
+                                    },
+                                    {
+                                      pattern: /^\d+$/,
+                                      message: "Некорректный ввод",
+                                    },
+                                  ]}
+                                  className="w-[10%]"
+                                >
+                                  <Input
+                                    placeholder="Балл"
+                                    value={
+                                      questionsData[i].answervariants.find(
+                                        (ansvar) => ansvar.id === ans.id
+                                      )?.points
+                                    }
+                                    onChange={(e) => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                answervariants:
+                                                  qd.answervariants.map(
+                                                    (variant) =>
+                                                      variant.id === ans.id
+                                                        ? {
+                                                            ...ans,
+                                                            points: parseInt(
+                                                              e.target.value
+                                                            ),
+                                                          }
+                                                        : variant
+                                                  ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                  ></Input>
+                                </Form.Item>
                                 <button
+                                  type="button"
                                   onClick={() => {
                                     setQuestionsData((prev) =>
                                       prev.map((qd) =>
@@ -514,82 +667,22 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                           ? {
                                               ...qd,
                                               answervariants:
-                                                qd.answervariants.map(
+                                                qd.answervariants.filter(
                                                   (variant) =>
-                                                    variant.id === ans.id
-                                                      ? {
-                                                          ...ans,
-                                                          correct: !ans.correct,
-                                                        }
-                                                      : variant
+                                                    variant.id !== ans.id
                                                 ),
                                             }
                                           : qd
                                       )
                                     );
                                   }}
-                                  type="button"
-                                  className=""
                                 >
-                                  {ans.correct ? (
-                                    <RadioChecked />
-                                  ) : (
-                                    <RadioEmpty />
-                                  )}
+                                  <DeleteIcon visible />
                                 </button>
-                              ) : (
-                                <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                                  <input
-                                    type="radio"
-                                    value={
-                                      questionsData[i].answervariants[j].text
-                                    }
-                                    name={`question${i + 1}OneAnswerOnly`}
-                                    onChange={() => {
-                                      setQuestionsData((prev) =>
-                                        prev.map((qd) =>
-                                          qd.id === obj.id
-                                            ? {
-                                                ...qd,
-                                                oneCorrectAnswer: `${questionsData[i].answervariants[j].text}`,
-                                              }
-                                            : qd
-                                        )
-                                      );
-                                    }}
-                                    className="hidden"
-                                  ></input>
-                                  {questionsData[i].oneCorrectAnswer ===
-                                  `${questionsData[i].answervariants[j].text}` ? (
-                                    <RadioChecked />
-                                  ) : (
-                                    <RadioEmpty />
-                                  )}
-                                </label>
-                              )}
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setQuestionsData((prev) =>
-                                  prev.map((qd) =>
-                                    qd.id === obj.id
-                                      ? {
-                                          ...qd,
-                                          answervariants:
-                                            qd.answervariants.filter(
-                                              (variant) => variant.id !== ans.id
-                                            ),
-                                        }
-                                      : qd
-                                  )
-                                );
-                              }}
-                            >
-                              <DeleteIcon visible />
-                            </button>
-                          </div>
-                        ))}
+                              </div>
+                            ))}
+                          </Form.Item>
+                        </div>
                       </div>
                     ) : (
                       <>
@@ -597,31 +690,28 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           <p className="font-onest font-medium text-[20px]/[25.5px]">
                             Правильные ответы
                           </p>
-                          <input
+                          <Input
                             className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
                             placeholder="Введите правильный ответ"
-                            onKeyUp={(e) => {
-                              e.preventDefault();
-                              if (e.code === "Enter") {
-                                setQuestionsData((prev) =>
-                                  prev.map((qd) =>
-                                    qd.id === obj.id
-                                      ? {
-                                          ...qd,
-                                          answerFieldValue: "",
-                                          correctAnswers: [
-                                            ...qd.correctAnswers,
-                                            {
-                                              id: uuid(),
-                                              text: qd.answerFieldValue,
-                                            },
-                                          ],
-                                        }
-                                      : qd
-                                  )
-                                );
-                              }
-                              console.log(e.code);
+                            onPressEnter={() => {
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? {
+                                        ...qd,
+                                        answerFieldValue: "",
+                                        correctAnswers: [
+                                          ...qd.correctAnswers,
+                                          {
+                                            id: uuid(),
+                                            text: qd.answerFieldValue,
+                                            points: 0,
+                                          },
+                                        ],
+                                      }
+                                    : qd
+                                )
+                              );
                             }}
                             onChange={(e) => {
                               setQuestionsData((prev) =>
@@ -636,8 +726,8 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               );
                             }}
                             value={questionsData[i].answerFieldValue}
-                          ></input>
-                          {questionsData[i].correctAnswers.map((ans) => (
+                          ></Input>
+                          {questionsData[i].correctAnswers.map((ans, j) => (
                             <div
                               className="flex w-full items-center"
                               key={ans.id}
@@ -645,55 +735,80 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
                                 {ans.text}
                               </p>
-                              <button
-                                className="ml-auto"
-                                type="button"
-                                onClick={() => {
-                                  setQuestionsData((prev) =>
-                                    prev.map((qd) =>
-                                      qd.id === obj.id
-                                        ? {
-                                            ...qd,
-                                            correctAnswers:
-                                              qd.correctAnswers.filter(
-                                                (cor) => cor.id !== ans.id
-                                              ),
-                                          }
-                                        : qd
-                                    )
-                                  );
-                                }}
-                              >
-                                <DeleteIcon visible />
-                              </button>
+                              <div className="ml-auto flex gap-[8px] items-center w-[15%]">
+                                <Form.Item
+                                  style={{
+                                    margin: 0,
+                                  }}
+                                  name={`question${i + 1}DirectAns${
+                                    j + 1
+                                  }Point`}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Не указан балл за ответ",
+                                    },
+                                    {
+                                      pattern: /^\d+$/,
+                                      message: "Некорректный ввод",
+                                    },
+                                  ]}
+                                  className=""
+                                >
+                                  <Input
+                                    placeholder="Балл"
+                                    onChange={(e) => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                correctAnswers:
+                                                  qd.correctAnswers.map(
+                                                    (variant) =>
+                                                      variant.id === ans.id
+                                                        ? {
+                                                            ...ans,
+                                                            points: parseInt(
+                                                              e.target.value
+                                                            ),
+                                                          }
+                                                        : variant
+                                                  ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                  ></Input>
+                                </Form.Item>
+                                <button
+                                  className="ml-auto"
+                                  type="button"
+                                  onClick={() => {
+                                    setQuestionsData((prev) =>
+                                      prev.map((qd) =>
+                                        qd.id === obj.id
+                                          ? {
+                                              ...qd,
+                                              correctAnswers:
+                                                qd.correctAnswers.filter(
+                                                  (cor) => cor.id !== ans.id
+                                                ),
+                                            }
+                                          : qd
+                                      )
+                                    );
+                                  }}
+                                >
+                                  <DeleteIcon visible />
+                                </button>
+                              </div>
                             </div>
                           ))}
                         </div>
                       </>
                     )}
-                    <div className="flex flex-col gap-[12px]">
-                      <p className="font-onest font-medium text-[20px]/[25.5px]">
-                        Балл за ответ
-                      </p>
-                      <input
-                        className="bg-[#EFF3F6] rounded-[12px] py-[16px] px-[24px] placeholder:font-onest placeholder:font-normal placeholder:text-[16px]/[20.4px] placeholder:text-[#B1C5D3] font-onest font-normal text-[16px]/[20.4px] text-black focus:outline-none focus:border focus:border-[#009EEB]"
-                        placeholder="Введите балл за ответ"
-                        onChange={(e) => {
-                          setQuestionsData((prev) =>
-                            prev.map((qd) =>
-                              qd.id === obj.id
-                                ? { ...qd, points: parseInt(e.target.value) }
-                                : qd
-                            )
-                          );
-                        }}
-                        value={
-                          Number.isNaN(questionsData[i].points)
-                            ? ""
-                            : questionsData[i].points
-                        }
-                      ></input>
-                    </div>
                   </div>
                 </>
               ))}

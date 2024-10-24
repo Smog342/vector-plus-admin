@@ -22,6 +22,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
       description: string;
       type: string;
       points: number;
+      image: string;
       answervariants: {
         id: string;
         images: { image: string }[];
@@ -79,6 +80,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                   description: "",
                   type: "one",
                   points: 0,
+                  image: "",
                   answervariants: [],
                   answerFieldValue: "",
                   correctAnswers: [],
@@ -328,6 +330,34 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                         ></Input>
                       </Form.Item>
                     </div>
+                    <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
+                      <input
+                        type="file"
+                        className="!hidden"
+                        onChange={(e) => {
+                          var reader = new FileReader();
+                          if (e.target.files) {
+                            reader.readAsDataURL(e.target.files[0]);
+                            reader.onload = () => {
+                              console.log(reader.result);
+                              setQuestionsData((prev) =>
+                                prev.map((qd) =>
+                                  qd.id === obj.id
+                                    ? {
+                                        ...qd,
+                                        image: reader.result as string,
+                                      }
+                                    : qd
+                                )
+                              );
+                            };
+                          } else {
+                            console.log("Удаляем файл");
+                          }
+                        }}
+                      ></input>
+                      Загрузить изображение
+                    </label>
                     <div className="flex flex-col gap-[12px]">
                       <p className="font-onest font-medium text-[20px]/[25.5px]">
                         Тип вопроса
@@ -512,102 +542,52 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                 <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
                                   {ans.text}
                                 </p>
-                                <div className="ml-auto flex gap-[8px]">
-                                  <input
-                                    placeholder="Ссылка на изображение"
-                                    className=""
-                                    onChange={(e) => {
-                                      setQuestionsData((prev) =>
-                                        prev.map((qd) =>
-                                          qd.id === obj.id
-                                            ? {
-                                                ...qd,
-                                                answervariants:
-                                                  qd.answervariants.map(
-                                                    (variant) =>
-                                                      variant.id === ans.id
-                                                        ? {
-                                                            ...ans,
-                                                            images: [
-                                                              {
-                                                                image:
-                                                                  e.target
-                                                                    .value,
-                                                              },
-                                                            ],
-                                                          }
-                                                        : variant
-                                                  ),
-                                              }
-                                            : qd
-                                        )
-                                      );
-                                    }}
-                                  ></input>
-                                  {/* {questionsData[i].type === "several" ? (
-                                    <button
-                                      onClick={() => {
-                                        setQuestionsData((prev) =>
-                                          prev.map((qd) =>
-                                            qd.id === obj.id
-                                              ? {
-                                                  ...qd,
-                                                  answervariants:
-                                                    qd.answervariants.map(
-                                                      (variant) =>
-                                                        variant.id === ans.id
-                                                          ? {
-                                                              ...ans,
-                                                              correct:
-                                                                !ans.correct,
-                                                            }
-                                                          : variant
-                                                    ),
-                                                }
-                                              : qd
-                                          )
-                                        );
-                                      }}
-                                      type="button"
-                                      className=""
-                                    >
-                                      {ans.correct ? (
-                                        <RadioChecked />
-                                      ) : (
-                                        <RadioEmpty />
-                                      )}
-                                    </button>
-                                  ) : (
-                                    <label className="flex items-center gap-[8px] font-onest font-normal text-black text-[16px]/[20.4px]">
-                                      <input
-                                        type="radio"
-                                        value={
-                                          questionsData[i].answervariants[j]
-                                            .text
-                                        }
-                                        name={`question${i + 1}OneAnswerOnly`}
-                                        onChange={() => {
-                                          setQuestionsData((prev) =>
-                                            prev.map((qd) =>
-                                              qd.id === obj.id
-                                                ? {
-                                                    ...qd,
-                                                    oneCorrectAnswer: `${questionsData[i].answervariants[j].text}`,
-                                                  }
-                                                : qd
-                                            )
+                                <div className="ml-auto mr-[8px]">
+                                  <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer">
+                                    <input
+                                      type="file"
+                                      className="!hidden"
+                                      onChange={(e) => {
+                                        var reader = new FileReader();
+                                        if (e.target.files) {
+                                          reader.readAsDataURL(
+                                            e.target.files[0]
                                           );
-                                        }}
-                                        className="hidden"
-                                      ></input>
-                                      {questionsData[i].oneCorrectAnswer ===
-                                      `${questionsData[i].answervariants[j].text}` ? (
-                                        <RadioChecked />
-                                      ) : (
-                                        <RadioEmpty />
-                                      )}
-                                    </label>
-                                  )} */}
+                                          reader.onload = () => {
+                                            console.log(reader.result);
+                                            setQuestionsData((prev) =>
+                                              prev.map((qd) =>
+                                                qd.id === obj.id
+                                                  ? {
+                                                      ...qd,
+                                                      answervariants:
+                                                        qd.answervariants.map(
+                                                          (variant) =>
+                                                            variant.id ===
+                                                            ans.id
+                                                              ? {
+                                                                  ...ans,
+                                                                  images: [
+                                                                    {
+                                                                      image:
+                                                                        reader.result as string,
+                                                                    },
+                                                                  ],
+                                                                }
+                                                              : variant
+                                                        ),
+                                                    }
+                                                  : qd
+                                              )
+                                            );
+                                          };
+                                        } else {
+                                          console.log("Удаляем файл");
+                                        }
+                                      }}
+                                    ></input>
+                                    Загрузить изображение
+                                  </label>
                                 </div>
                                 <Form.Item
                                   style={{ margin: 0 }}

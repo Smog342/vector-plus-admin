@@ -7,7 +7,7 @@ import { SchoolLevel, SchoolType } from "../types";
 import { useCreateTestMutation, useGetTestsQuery } from "../store/api/mainApi";
 import uuid from "react-uuid";
 import { DeleteIcon } from "../icons/DeleteIcon";
-import { Modal, Form, Input, Radio } from "antd";
+import { Modal, Form, Input, Radio, Button } from "antd";
 
 export const AddTestForm = (props: { type: SchoolType }) => {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -34,6 +34,14 @@ export const AddTestForm = (props: { type: SchoolType }) => {
       answerFieldValue: string;
       correctAnswers: { id: string; text: string; points: number }[];
       oneCorrectAnswer: string;
+      matchPairs: {
+        id: string;
+        textOne: string;
+        textSecond: string;
+        imageOne: string;
+        imageSecond: string;
+        points: number;
+      }[];
     }[]
   >([]);
 
@@ -85,6 +93,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                   answerFieldValue: "",
                   correctAnswers: [],
                   oneCorrectAnswer: "",
+                  matchPairs: [],
                 }))
               );
               navigate("/admin/tests/1");
@@ -664,7 +673,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                           </Form.Item>
                         </div>
                       </div>
-                    ) : (
+                    ) : questionsData[i].type === "open" ? (
                       <>
                         <div className="flex flex-col gap-[12px]">
                           <p className="font-onest font-medium text-[20px]/[25.5px]">
@@ -787,6 +796,112 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                             </div>
                           ))}
                         </div>
+                      </>
+                    ) : (
+                      <>
+                        {questionsData[i].matchPairs.map((mp) => (
+                          <>
+                            <div className="flex">
+                              <Input
+                                className="mr-auto"
+                                value={mp.textOne}
+                                onChange={(e) => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            matchPairs: qd.matchPairs.map(
+                                              (pair) =>
+                                                pair.id === mp.id
+                                                  ? {
+                                                      ...pair,
+                                                      textOne: e.target.value,
+                                                    }
+                                                  : pair
+                                            ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                              ></Input>
+                              <Input
+                                className="ml-auto"
+                                value={mp.textSecond}
+                                onChange={(e) => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            matchPairs: qd.matchPairs.map(
+                                              (pair) =>
+                                                pair.id === mp.id
+                                                  ? {
+                                                      ...pair,
+                                                      textSecond:
+                                                        e.target.value,
+                                                    }
+                                                  : pair
+                                            ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                              ></Input>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setQuestionsData((prev) =>
+                                    prev.map((qd) =>
+                                      qd.id === obj.id
+                                        ? {
+                                            ...qd,
+                                            matchPairs: qd.matchPairs.filter(
+                                              (pair) => pair.id !== mp.id
+                                            ),
+                                          }
+                                        : qd
+                                    )
+                                  );
+                                }}
+                              >
+                                <DeleteIcon visible />
+                              </button>
+                            </div>
+                          </>
+                        ))}
+                        <Button
+                          type="primary"
+                          className="mx-auto"
+                          onClick={() => {
+                            setQuestionsData((prev) =>
+                              prev.map((qd) =>
+                                qd.id === obj.id
+                                  ? {
+                                      ...qd,
+                                      answerFieldValue: "",
+                                      matchPairs: [
+                                        ...qd.matchPairs,
+                                        {
+                                          id: uuid(),
+                                          textOne: "",
+                                          textSecond: "",
+                                          imageOne: "",
+                                          imageSecond: "",
+                                          points: 1,
+                                        },
+                                      ],
+                                    }
+                                  : qd
+                              )
+                            );
+                          }}
+                        >
+                          Добавить
+                        </Button>
                       </>
                     )}
                   </div>

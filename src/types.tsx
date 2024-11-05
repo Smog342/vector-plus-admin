@@ -90,11 +90,28 @@ export type AddTestData = {
     points: number;
     message: string;
   }[];
-  oneSelectedAnswerQuestions: BaseQuestionType &
-    { answerVariants: BaseAnswerType[] }[];
-  manySelectedAnswerQuestions: BaseQuestionType &
-    { answerVariants: BaseAnswerType[] }[];
-  inputQuestions: BaseQuestionType &
-    { answerVariants: Omit<BaseAnswerType, "variantNumber" | "images">[] }[];
-  matchQuestions: BaseQuestionType & { pairs: BaseMatchType[] }[];
+  oneSelectedAnswerQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    answerVariants: BaseAnswerType[];
+  }[];
+  manySelectedAnswerQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    answerVariants: BaseAnswerType[];
+  }[];
+  inputQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    answerVariants: Omit<BaseAnswerType, "variantNumber" | "images">[];
+  }[];
+  matchQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    pairs: BaseMatchType[];
+  }[];
 };

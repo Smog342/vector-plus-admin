@@ -45,6 +45,10 @@ export const AddTestForm = (props: { type: SchoolType }) => {
     }[]
   >([]);
 
+  const [ratePhrases, setRatePhrases] = useState<
+    { id: string; points: number; message: string }[]
+  >([]);
+
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -291,9 +295,9 @@ export const AddTestForm = (props: { type: SchoolType }) => {
           </Form>
         ) : pathname === "/admin/tests/1" ? (
           <Form
-            onFinish={(values) => {
-              //console.log(values);
+            onFinish={() => {
               console.log(questionsData);
+              navigate("/admin/tests/2");
             }}
             onKeyDown={(e) => {
               e.key === "Enter" && e.preventDefault();
@@ -1073,11 +1077,168 @@ export const AddTestForm = (props: { type: SchoolType }) => {
           <Form
             onFinish={(values) => {
               console.log(values);
-              navigate("/admin/tests/1");
+              addTest({
+                title: testName,
+                description: "",
+                targetAudience: schoolLevel,
+                organizationType: props.type,
+                pointsRating: ratePhrases,
+                oneSelectedAnswerQuestions: questionsData
+                  .filter((qd) => qd.type === "one")
+                  .map((qd, i) => ({
+                    questionNumber: i,
+                    text: qd.description,
+                    image: qd.image,
+                    answerVariants: qd.answervariants,
+                  })),
+                manySelectedAnswerQuestions: questionsData
+                  .filter((qd) => qd.type === "one")
+                  .map((qd, i) => ({
+                    questionNumber: i,
+                    text: qd.description,
+                    image: qd.image,
+                    answerVariants: qd.answervariants,
+                  })),
+                inputQuestions: questionsData
+                  .filter((qd) => qd.type === "one")
+                  .map((qd, i) => ({
+                    questionNumber: i,
+                    text: qd.description,
+                    image: qd.image,
+                    answerVariants: qd.correctAnswers,
+                  })),
+                matchQuestions: questionsData
+                  .filter((qd) => qd.type === "one")
+                  .map((qd, i) => ({
+                    questionNumber: i,
+                    text: qd.description,
+                    image: qd.image,
+                    pairs: qd.matchPairs,
+                  })),
+              })
+                .unwrap()
+                .then(() => {
+                  navigate("/admin/tests");
+                  setIsModalOpen(false);
+                });
             }}
             layout="vertical"
             className="flex flex-col gap-[32px]"
-          ></Form>
+          >
+            <>
+              <p className="mr-auto font-onest font-bold text-[28px]/[35.7px]">
+                Добавить тест
+              </p>
+              <div className="flex flex-col gap-[24px]">
+                <div className="flex flex-col gap-[12px]">
+                  <p className="font-onest font-medium text-[20px]/[25.5px]">
+                    Критерии оценки
+                  </p>
+                  <div className="flex gap-[16px] font-onest font-normal text-[16px]/[20.4px] text-black">
+                    <p>
+                      <span className="text-[#009EEB] font-bold">0-19</span> —
+                      «Нормально»
+                    </p>
+                    <p>
+                      <span className="text-[#009EEB] font-bold">20-59</span> —
+                      «Хорошо»
+                    </p>
+                    <p>
+                      <span className="text-[#009EEB] font-bold">60+</span> —
+                      «Отлично»
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-[16px]">
+                    {ratePhrases.map((rtp, i) => (
+                      <>
+                        <div className="flex items-center gap-[16px]">
+                          <Form.Item
+                            name={`ratePhrase${i}`}
+                            style={{ margin: 0 }}
+                            rules={[
+                              { required: true, message: "Не указан балл" },
+                              {
+                                pattern: /^\d+$/,
+                                message: "Некорректный ввод",
+                              },
+                            ]}
+                          >
+                            <Input
+                              placeholder="Введите балл"
+                              value={rtp.points}
+                              onChange={(e) => {
+                                setRatePhrases((prev) =>
+                                  prev.map((phr) =>
+                                    phr.id === rtp.id
+                                      ? {
+                                          ...phr,
+                                          points: parseInt(e.target.value),
+                                        }
+                                      : phr
+                                  )
+                                );
+                              }}
+                            ></Input>
+                          </Form.Item>
+                          <Input
+                            placeholder="Введите оценку"
+                            value={rtp.message}
+                            onChange={(e) => {
+                              setRatePhrases((prev) =>
+                                prev.map((phr) =>
+                                  phr.id === rtp.id
+                                    ? { ...phr, message: e.target.value }
+                                    : phr
+                                )
+                              );
+                            }}
+                          ></Input>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRatePhrases((prev) =>
+                                prev.filter((phr) => phr.id !== rtp.id)
+                              );
+                            }}
+                          >
+                            <DeleteIcon visible />
+                          </button>
+                        </div>
+                      </>
+                    ))}
+                  </div>
+                  <Button
+                    className="mx-auto"
+                    type="primary"
+                    onClick={() => {
+                      setRatePhrases((prev) => [
+                        ...prev,
+                        { id: uuid(), points: 0, message: "" },
+                      ]);
+                    }}
+                  >
+                    Добавить
+                  </Button>
+                </div>
+              </div>
+              <div className="mt-auto mx-auto flex gap-[32px]">
+                <CustomButton
+                  text="ВЕРНУТЬСЯ"
+                  submit={false}
+                  type="WHITE"
+                  onClick={() => {
+                    navigate("/admin/tests/1");
+                  }}
+                />
+                <CustomButton
+                  text="СОХРАНИТЬ"
+                  submit={true}
+                  type="BLUE"
+                  onClick={() => {}}
+                />
+              </div>
+            </>
+          </Form>
         )}
       </Modal>
       <div className="mx-auto">

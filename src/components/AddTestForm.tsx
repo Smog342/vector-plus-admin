@@ -1137,7 +1137,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                   const { id, ...rest } = phrase;
                   return rest;
                 }),
-                oneSelectedAnswerQuestions: questionsData
+                oneSelectAnswerQuestions: questionsData
                   .filter((qd) => qd.type === "one")
                   .map((qd) => ({
                     questionNumber:
@@ -1151,7 +1151,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                       return rest;
                     }),
                   })),
-                manySelectedAnswerQuestions: questionsData
+                manySelectAnswerQuestions: questionsData
                   .filter((qd) => qd.type === "several")
                   .map((qd) => ({
                     questionNumber:
@@ -1193,7 +1193,19 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                       return rest;
                     }),
                   })),
-              });
+              })
+                .unwrap()
+                .then(() => {
+                  refetch()
+                    .unwrap()
+                    .then(() => {
+                      navigate("/admin/employees");
+                      setIsModalOpen(false);
+                      setTimeout(() => {
+                        navigate("/admin/tests");
+                      }, 0);
+                    });
+                });
             }}
             layout="vertical"
             className="flex flex-col gap-[32px]"

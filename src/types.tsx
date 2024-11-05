@@ -90,13 +90,13 @@ export type AddTestData = {
     points: number;
     message: string;
   }[];
-  oneSelectedAnswerQuestions: {
+  oneSelectAnswerQuestions: {
     questionNumber: number;
     text: string;
     image: string;
     answerVariants: BaseAnswerType[];
   }[];
-  manySelectedAnswerQuestions: {
+  manySelectAnswerQuestions: {
     questionNumber: number;
     text: string;
     image: string;

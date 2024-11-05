@@ -36,10 +36,10 @@ export const AddTestForm = (props: { type: SchoolType }) => {
       oneCorrectAnswer: string;
       matchPairs: {
         id: string;
-        textOne: string;
-        textSecond: string;
-        imageOne: string;
-        imageSecond: string;
+        firstText: string;
+        secondText: string;
+        firstImage: string;
+        secondImage: string;
         points: number;
       }[];
     }[]
@@ -816,7 +816,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               >
                                 <Input
                                   className="mr-auto"
-                                  value={mp.textOne}
+                                  value={mp.firstText}
                                   onChange={(e) => {
                                     setQuestionsData((prev) =>
                                       prev.map((qd) =>
@@ -828,7 +828,8 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                                   pair.id === mp.id
                                                     ? {
                                                         ...pair,
-                                                        textOne: e.target.value,
+                                                        firstText:
+                                                          e.target.value,
                                                       }
                                                     : pair
                                               ),
@@ -856,7 +857,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                               >
                                 <Input
                                   className="ml-auto"
-                                  value={mp.textSecond}
+                                  value={mp.secondText}
                                   onChange={(e) => {
                                     setQuestionsData((prev) =>
                                       prev.map((qd) =>
@@ -868,7 +869,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                                   pair.id === mp.id
                                                     ? {
                                                         ...pair,
-                                                        textSecond:
+                                                        secondText:
                                                           e.target.value,
                                                       }
                                                     : pair
@@ -964,7 +965,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                                       pair.id === mp.id
                                                         ? {
                                                             ...pair,
-                                                            imageOne:
+                                                            firstImage:
                                                               reader.result as string,
                                                           }
                                                         : pair
@@ -1001,7 +1002,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                                       pair.id === mp.id
                                                         ? {
                                                             ...pair,
-                                                            imageSecond:
+                                                            secondImage:
                                                               reader.result as string,
                                                           }
                                                         : pair
@@ -1035,11 +1036,11 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                         ...qd.matchPairs,
                                         {
                                           id: uuid(),
-                                          textOne: "",
-                                          textSecond: "",
-                                          imageOne: "",
-                                          imageSecond: "",
-                                          points: 1,
+                                          firstText: "",
+                                          secondText: "",
+                                          firstImage: "",
+                                          secondImage: "",
+                                          points: 0,
                                         },
                                       ],
                                     }
@@ -1075,9 +1076,8 @@ export const AddTestForm = (props: { type: SchoolType }) => {
           </Form>
         ) : (
           <Form
-            onFinish={(values) => {
-              console.log(values);
-              addTest({
+            onFinish={() => {
+              console.log({
                 title: testName,
                 description: "",
                 targetAudience: schoolLevel,
@@ -1086,41 +1086,114 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                 oneSelectedAnswerQuestions: questionsData
                   .filter((qd) => qd.type === "one")
                   .map((qd, i) => ({
-                    questionNumber: i,
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
                     text: qd.description,
                     image: qd.image,
                     answerVariants: qd.answervariants,
                   })),
                 manySelectedAnswerQuestions: questionsData
-                  .filter((qd) => qd.type === "one")
+                  .filter((qd) => qd.type === "several")
                   .map((qd, i) => ({
-                    questionNumber: i,
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
                     text: qd.description,
                     image: qd.image,
                     answerVariants: qd.answervariants,
                   })),
                 inputQuestions: questionsData
-                  .filter((qd) => qd.type === "one")
+                  .filter((qd) => qd.type === "open")
                   .map((qd, i) => ({
-                    questionNumber: i,
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
                     text: qd.description,
                     image: qd.image,
                     answerVariants: qd.correctAnswers,
                   })),
                 matchQuestions: questionsData
-                  .filter((qd) => qd.type === "one")
+                  .filter((qd) => qd.type === "match")
                   .map((qd, i) => ({
-                    questionNumber: i,
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
                     text: qd.description,
                     image: qd.image,
                     pairs: qd.matchPairs,
                   })),
-              })
-                .unwrap()
-                .then(() => {
-                  navigate("/admin/tests");
-                  setIsModalOpen(false);
-                });
+              });
+              addTest({
+                title: testName,
+                description: "Описание теста",
+                targetAudience: schoolLevel,
+                organizationType: props.type,
+                pointsRating: ratePhrases.map((phrase) => {
+                  const { id, ...rest } = phrase;
+                  return rest;
+                }),
+                oneSelectedAnswerQuestions: questionsData
+                  .filter((qd) => qd.type === "one")
+                  .map((qd) => ({
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
+                    text: qd.description,
+                    image: qd.image,
+                    answerVariants: qd.answervariants.map((ansvar) => {
+                      const { id, correct, ...rest } = ansvar;
+                      return rest;
+                    }),
+                  })),
+                manySelectedAnswerQuestions: questionsData
+                  .filter((qd) => qd.type === "several")
+                  .map((qd) => ({
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
+                    text: qd.description,
+                    image: qd.image,
+                    answerVariants: qd.answervariants.map((ansvar) => {
+                      const { id, correct, ...rest } = ansvar;
+                      return rest;
+                    }),
+                  })),
+                inputQuestions: questionsData
+                  .filter((qd) => qd.type === "open")
+                  .map((qd) => ({
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
+                    text: qd.description,
+                    image: qd.image,
+                    answerVariants: qd.correctAnswers.map((ansvar) => {
+                      const { id, ...rest } = ansvar;
+                      return rest;
+                    }),
+                  })),
+                matchQuestions: questionsData
+                  .filter((qd) => qd.type === "match")
+                  .map((qd) => ({
+                    questionNumber:
+                      questionsData.indexOf(
+                        questionsData.find((question) => question.id === qd.id)!
+                      ) + 1,
+                    text: qd.description,
+                    image: qd.image,
+                    pairs: qd.matchPairs.map((matchpair) => {
+                      const { id, ...rest } = matchpair;
+                      return rest;
+                    }),
+                  })),
+              });
             }}
             layout="vertical"
             className="flex flex-col gap-[32px]"

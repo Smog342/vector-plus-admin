@@ -742,85 +742,104 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                             }}
                             value={questionsData[i].answerFieldValue}
                           ></Input>
-                          {questionsData[i].correctAnswers.map((ans, j) => (
-                            <div
-                              className="flex w-full items-center"
-                              key={ans.id}
-                            >
-                              <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
-                                {ans.text}
-                              </p>
-                              <div className="ml-auto flex gap-[8px] items-center w-[15%]">
-                                <Form.Item
-                                  style={{
-                                    margin: 0,
-                                  }}
-                                  name={`question${i + 1}DirectAns${
-                                    j + 1
-                                  }Point`}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: "Не указан балл за ответ",
-                                    },
-                                    {
-                                      pattern: /^\d+$/,
-                                      message: "Некорректный ввод",
-                                    },
-                                  ]}
-                                  className=""
-                                >
-                                  <Input
-                                    placeholder="Балл"
-                                    onChange={(e) => {
+                          <Form.Item
+                            style={{ margin: 0 }}
+                            name={`question${i + 1}OpenAnswer`}
+                            rules={[
+                              () => ({
+                                validator() {
+                                  if (
+                                    questionsData[i].correctAnswers.length !== 0
+                                  ) {
+                                    return Promise.resolve();
+                                  }
+                                  return Promise.reject(
+                                    new Error("Должна быть хотя бы один ответ")
+                                  );
+                                },
+                              }),
+                            ]}
+                          >
+                            {questionsData[i].correctAnswers.map((ans, j) => (
+                              <div
+                                className="flex w-full items-center"
+                                key={ans.id}
+                              >
+                                <p className="font-onest font-medium text-[20px]/[25.5px] w-[60%]">
+                                  {ans.text}
+                                </p>
+                                <div className="ml-auto flex gap-[8px] items-center w-[15%]">
+                                  <Form.Item
+                                    style={{
+                                      margin: 0,
+                                    }}
+                                    name={`question${i + 1}DirectAns${
+                                      j + 1
+                                    }Point`}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "Не указан балл за ответ",
+                                      },
+                                      {
+                                        pattern: /^\d+$/,
+                                        message: "Некорректный ввод",
+                                      },
+                                    ]}
+                                    className=""
+                                  >
+                                    <Input
+                                      placeholder="Балл"
+                                      onChange={(e) => {
+                                        setQuestionsData((prev) =>
+                                          prev.map((qd) =>
+                                            qd.id === obj.id
+                                              ? {
+                                                  ...qd,
+                                                  correctAnswers:
+                                                    qd.correctAnswers.map(
+                                                      (variant) =>
+                                                        variant.id === ans.id
+                                                          ? {
+                                                              ...ans,
+                                                              points: parseInt(
+                                                                e.target.value
+                                                              ),
+                                                            }
+                                                          : variant
+                                                    ),
+                                                }
+                                              : qd
+                                          )
+                                        );
+                                      }}
+                                    ></Input>
+                                  </Form.Item>
+                                  <button
+                                    className="ml-auto"
+                                    type="button"
+                                    onClick={() => {
                                       setQuestionsData((prev) =>
                                         prev.map((qd) =>
                                           qd.id === obj.id
                                             ? {
                                                 ...qd,
                                                 correctAnswers:
-                                                  qd.correctAnswers.map(
-                                                    (variant) =>
-                                                      variant.id === ans.id
-                                                        ? {
-                                                            ...ans,
-                                                            points: parseInt(
-                                                              e.target.value
-                                                            ),
-                                                          }
-                                                        : variant
+                                                  qd.correctAnswers.filter(
+                                                    (cor) => cor.id !== ans.id
                                                   ),
                                               }
                                             : qd
                                         )
                                       );
                                     }}
-                                  ></Input>
-                                </Form.Item>
-                                <button
-                                  className="ml-auto"
-                                  type="button"
-                                  onClick={() => {
-                                    setQuestionsData((prev) =>
-                                      prev.map((qd) =>
-                                        qd.id === obj.id
-                                          ? {
-                                              ...qd,
-                                              correctAnswers:
-                                                qd.correctAnswers.filter(
-                                                  (cor) => cor.id !== ans.id
-                                                ),
-                                            }
-                                          : qd
-                                      )
-                                    );
-                                  }}
-                                >
-                                  <DeleteIcon visible />
-                                </button>
+                                  >
+                                    <DeleteIcon visible />
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            ))}
+                          </Form.Item>
                         </div>
                       </>
                     ) : (

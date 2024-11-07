@@ -15,7 +15,6 @@ export const AddTestForm = (props: { type: SchoolType }) => {
   const [questionsFieldValue, setQuestionsFieldValue] = useState<string>("");
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel | "">("");
   const [testName, setTestName] = useState<string>("");
-  const [ratePhrase, setRatePhrase] = useState<string>("");
   const [questionsData, setQuestionsData] = useState<
     {
       id: string;
@@ -570,7 +569,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                             ]}
                           >
                             <div className="h-[1px] scroll-m-[114px]"></div>
-                            {questionsData[i].answervariants.map((ans, j) => (
+                            {questionsData[i].answervariants.map((ans) => (
                               <div
                                 className="flex w-full items-center"
                                 key={ans.id}
@@ -1136,7 +1135,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                 pointsRating: ratePhrases,
                 oneSelectedAnswerQuestions: questionsData
                   .filter((qd) => qd.type === "one")
-                  .map((qd, i) => ({
+                  .map((qd) => ({
                     questionNumber:
                       questionsData.indexOf(
                         questionsData.find((question) => question.id === qd.id)!
@@ -1147,7 +1146,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                   })),
                 manySelectedAnswerQuestions: questionsData
                   .filter((qd) => qd.type === "several")
-                  .map((qd, i) => ({
+                  .map((qd) => ({
                     questionNumber:
                       questionsData.indexOf(
                         questionsData.find((question) => question.id === qd.id)!
@@ -1158,7 +1157,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                   })),
                 inputQuestions: questionsData
                   .filter((qd) => qd.type === "open")
-                  .map((qd, i) => ({
+                  .map((qd) => ({
                     questionNumber:
                       questionsData.indexOf(
                         questionsData.find((question) => question.id === qd.id)!
@@ -1169,7 +1168,7 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                   })),
                 matchQuestions: questionsData
                   .filter((qd) => qd.type === "match")
-                  .map((qd, i) => ({
+                  .map((qd) => ({
                     questionNumber:
                       questionsData.indexOf(
                         questionsData.find((question) => question.id === qd.id)!

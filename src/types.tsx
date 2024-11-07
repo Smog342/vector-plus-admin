@@ -60,12 +60,6 @@ export type AddEmployeeType = {
   workExperience: number;
 };
 
-type BaseQuestionType = {
-  questionNumber: number;
-  text: string;
-  image: string;
-};
-
 type BaseAnswerType = {
   images: { image: string }[];
   text: string;

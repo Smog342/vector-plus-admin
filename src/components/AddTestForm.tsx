@@ -537,6 +537,36 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                                   );
                                 },
                               }),
+                              () => ({
+                                validator() {
+                                  if (questionsData[i].type === "one") {
+                                    if (
+                                      questionsData[i].answervariants.filter(
+                                        (av) => av.points !== 0
+                                      ).length !== 1
+                                    ) {
+                                      console.log("Что-то пошло не так");
+                                      console.log(
+                                        questionsData[i].answervariants
+                                      );
+                                      console.log(
+                                        questionsData[i].answervariants.filter(
+                                          (av) => av.points !== 0
+                                        ).length
+                                      );
+                                      return Promise.reject(
+                                        new Error(
+                                          "Должен быть только один ответ с ненулевым числом баллов"
+                                        )
+                                      );
+                                    } else {
+                                      return Promise.resolve();
+                                    }
+                                  } else {
+                                    return Promise.resolve();
+                                  }
+                                },
+                              }),
                             ]}
                           >
                             <div className="h-[1px] scroll-m-[114px]"></div>
@@ -796,232 +826,253 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                       </>
                     ) : (
                       <>
-                        {questionsData[i].matchPairs.map((mp, j) => (
-                          <>
-                            <div className="flex w-full gap-[10px] items-center">
-                              <Form.Item
-                                style={{
-                                  margin: 0,
-                                }}
-                                name={`question${i + 1}MatchPair${
-                                  j + 1
-                                }TextOne`}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Не указан текст первой пары",
-                                  },
-                                ]}
-                                className="w-[40%]"
-                              >
-                                <Input
-                                  className="mr-auto"
-                                  value={mp.firstText}
-                                  onChange={(e) => {
+                        <Form.Item
+                          style={{ margin: 0 }}
+                          name={`question${i + 1}MatchPairs`}
+                          rules={[
+                            () => ({
+                              validator() {
+                                if (questionsData[i].matchPairs.length !== 0) {
+                                  return Promise.resolve();
+                                }
+                                return Promise.reject(
+                                  new Error("Должна быть хотя бы одна пара")
+                                );
+                              },
+                            }),
+                          ]}
+                        >
+                          {questionsData[i].matchPairs.map((mp, j) => (
+                            <>
+                              <div className="flex w-full gap-[10px] items-center">
+                                <Form.Item
+                                  style={{
+                                    margin: 0,
+                                  }}
+                                  name={`question${i + 1}MatchPair${
+                                    j + 1
+                                  }TextOne`}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Не указан текст первой пары",
+                                    },
+                                  ]}
+                                  className="w-[40%]"
+                                >
+                                  <Input
+                                    className="mr-auto"
+                                    value={mp.firstText}
+                                    onChange={(e) => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                matchPairs: qd.matchPairs.map(
+                                                  (pair) =>
+                                                    pair.id === mp.id
+                                                      ? {
+                                                          ...pair,
+                                                          firstText:
+                                                            e.target.value,
+                                                        }
+                                                      : pair
+                                                ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                  ></Input>
+                                </Form.Item>
+                                <Form.Item
+                                  style={{
+                                    margin: 0,
+                                  }}
+                                  name={`question${i + 1}MatchPair${
+                                    j + 1
+                                  }textSecond`}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Не указан текст второй пары",
+                                    },
+                                  ]}
+                                  className="w-[40%] flex flex-col"
+                                >
+                                  <Input
+                                    className="ml-auto"
+                                    value={mp.secondText}
+                                    onChange={(e) => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                matchPairs: qd.matchPairs.map(
+                                                  (pair) =>
+                                                    pair.id === mp.id
+                                                      ? {
+                                                          ...pair,
+                                                          secondText:
+                                                            e.target.value,
+                                                        }
+                                                      : pair
+                                                ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                  ></Input>
+                                </Form.Item>
+                                <Form.Item
+                                  style={{
+                                    margin: 0,
+                                  }}
+                                  name={`question${i + 1}MatchPair${
+                                    j + 1
+                                  }Point`}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Не указан балл за ответ",
+                                    },
+                                    {
+                                      pattern: /^\d+$/,
+                                      message: "Некорректный ввод",
+                                    },
+                                  ]}
+                                  className=""
+                                >
+                                  <Input
+                                    placeholder="Балл"
+                                    onChange={(e) => {
+                                      setQuestionsData((prev) =>
+                                        prev.map((qd) =>
+                                          qd.id === obj.id
+                                            ? {
+                                                ...qd,
+                                                matchPairs: qd.matchPairs.map(
+                                                  (pair) =>
+                                                    pair.id === mp.id
+                                                      ? {
+                                                          ...pair,
+                                                          points: parseInt(
+                                                            e.target.value
+                                                          ),
+                                                        }
+                                                      : pair
+                                                ),
+                                              }
+                                            : qd
+                                        )
+                                      );
+                                    }}
+                                  ></Input>
+                                </Form.Item>
+                                <button
+                                  type="button"
+                                  onClick={() => {
                                     setQuestionsData((prev) =>
                                       prev.map((qd) =>
                                         qd.id === obj.id
                                           ? {
                                               ...qd,
-                                              matchPairs: qd.matchPairs.map(
-                                                (pair) =>
-                                                  pair.id === mp.id
-                                                    ? {
-                                                        ...pair,
-                                                        firstText:
-                                                          e.target.value,
-                                                      }
-                                                    : pair
+                                              matchPairs: qd.matchPairs.filter(
+                                                (pair) => pair.id !== mp.id
                                               ),
                                             }
                                           : qd
                                       )
                                     );
                                   }}
-                                ></Input>
-                              </Form.Item>
-                              <Form.Item
-                                style={{
-                                  margin: 0,
-                                }}
-                                name={`question${i + 1}MatchPair${
-                                  j + 1
-                                }textSecond`}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Не указан текст второй пары",
-                                  },
-                                ]}
-                                className="w-[40%] flex flex-col"
-                              >
-                                <Input
-                                  className="ml-auto"
-                                  value={mp.secondText}
-                                  onChange={(e) => {
-                                    setQuestionsData((prev) =>
-                                      prev.map((qd) =>
-                                        qd.id === obj.id
-                                          ? {
-                                              ...qd,
-                                              matchPairs: qd.matchPairs.map(
-                                                (pair) =>
-                                                  pair.id === mp.id
-                                                    ? {
-                                                        ...pair,
-                                                        secondText:
-                                                          e.target.value,
-                                                      }
-                                                    : pair
-                                              ),
-                                            }
-                                          : qd
-                                      )
-                                    );
-                                  }}
-                                ></Input>
-                              </Form.Item>
-                              <Form.Item
-                                style={{
-                                  margin: 0,
-                                }}
-                                name={`question${i + 1}MatchPair${j + 1}Point`}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Не указан балл за ответ",
-                                  },
-                                  {
-                                    pattern: /^\d+$/,
-                                    message: "Некорректный ввод",
-                                  },
-                                ]}
-                                className=""
-                              >
-                                <Input
-                                  placeholder="Балл"
-                                  onChange={(e) => {
-                                    setQuestionsData((prev) =>
-                                      prev.map((qd) =>
-                                        qd.id === obj.id
-                                          ? {
-                                              ...qd,
-                                              matchPairs: qd.matchPairs.map(
-                                                (pair) =>
-                                                  pair.id === mp.id
-                                                    ? {
-                                                        ...pair,
-                                                        points: parseInt(
-                                                          e.target.value
-                                                        ),
-                                                      }
-                                                    : pair
-                                              ),
-                                            }
-                                          : qd
-                                      )
-                                    );
-                                  }}
-                                ></Input>
-                              </Form.Item>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setQuestionsData((prev) =>
-                                    prev.map((qd) =>
-                                      qd.id === obj.id
-                                        ? {
-                                            ...qd,
-                                            matchPairs: qd.matchPairs.filter(
-                                              (pair) => pair.id !== mp.id
-                                            ),
-                                          }
-                                        : qd
-                                    )
-                                  );
-                                }}
-                              >
-                                <DeleteIcon visible />
-                              </button>
-                            </div>
-                            <div className="flex w-full">
-                              <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer w-[40%]">
-                                <input
-                                  type="file"
-                                  className="!hidden"
-                                  onChange={(e) => {
-                                    var reader = new FileReader();
-                                    if (e.target.files) {
-                                      reader.readAsDataURL(e.target.files[0]);
-                                      reader.onload = () => {
-                                        console.log(reader.result);
-                                        setQuestionsData((prev) =>
-                                          prev.map((qd) =>
-                                            qd.id === obj.id
-                                              ? {
-                                                  ...qd,
-                                                  matchPairs: qd.matchPairs.map(
-                                                    (pair) =>
-                                                      pair.id === mp.id
-                                                        ? {
-                                                            ...pair,
-                                                            firstImage:
-                                                              reader.result as string,
-                                                          }
-                                                        : pair
-                                                  ),
-                                                }
-                                              : qd
-                                          )
-                                        );
-                                      };
-                                    } else {
-                                      console.log("Удаляем файл");
-                                    }
-                                  }}
-                                ></input>
-                                Загрузить изображение
-                              </label>
-                              <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer w-[40%]">
-                                <input
-                                  type="file"
-                                  className="!hidden"
-                                  onChange={(e) => {
-                                    var reader = new FileReader();
-                                    if (e.target.files) {
-                                      reader.readAsDataURL(e.target.files[0]);
-                                      reader.onload = () => {
-                                        console.log(reader.result);
-                                        setQuestionsData((prev) =>
-                                          prev.map((qd) =>
-                                            qd.id === obj.id
-                                              ? {
-                                                  ...qd,
-                                                  matchPairs: qd.matchPairs.map(
-                                                    (pair) =>
-                                                      pair.id === mp.id
-                                                        ? {
-                                                            ...pair,
-                                                            secondImage:
-                                                              reader.result as string,
-                                                          }
-                                                        : pair
-                                                  ),
-                                                }
-                                              : qd
-                                          )
-                                        );
-                                      };
-                                    } else {
-                                      console.log("Удаляем файл");
-                                    }
-                                  }}
-                                ></input>
-                                Загрузить изображение
-                              </label>
-                            </div>
-                          </>
-                        ))}
+                                >
+                                  <DeleteIcon visible />
+                                </button>
+                              </div>
+                              <div className="flex w-full">
+                                <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer w-[40%]">
+                                  <input
+                                    type="file"
+                                    className="!hidden"
+                                    onChange={(e) => {
+                                      var reader = new FileReader();
+                                      if (e.target.files) {
+                                        reader.readAsDataURL(e.target.files[0]);
+                                        reader.onload = () => {
+                                          console.log(reader.result);
+                                          setQuestionsData((prev) =>
+                                            prev.map((qd) =>
+                                              qd.id === obj.id
+                                                ? {
+                                                    ...qd,
+                                                    matchPairs:
+                                                      qd.matchPairs.map(
+                                                        (pair) =>
+                                                          pair.id === mp.id
+                                                            ? {
+                                                                ...pair,
+                                                                firstImage:
+                                                                  reader.result as string,
+                                                              }
+                                                            : pair
+                                                      ),
+                                                  }
+                                                : qd
+                                            )
+                                          );
+                                        };
+                                      } else {
+                                        console.log("Удаляем файл");
+                                      }
+                                    }}
+                                  ></input>
+                                  Загрузить изображение
+                                </label>
+                                <label className="font-onest font-normal text-black text-[16px]/[20.4px] underline cursor-pointer w-[40%]">
+                                  <input
+                                    type="file"
+                                    className="!hidden"
+                                    onChange={(e) => {
+                                      var reader = new FileReader();
+                                      if (e.target.files) {
+                                        reader.readAsDataURL(e.target.files[0]);
+                                        reader.onload = () => {
+                                          console.log(reader.result);
+                                          setQuestionsData((prev) =>
+                                            prev.map((qd) =>
+                                              qd.id === obj.id
+                                                ? {
+                                                    ...qd,
+                                                    matchPairs:
+                                                      qd.matchPairs.map(
+                                                        (pair) =>
+                                                          pair.id === mp.id
+                                                            ? {
+                                                                ...pair,
+                                                                secondImage:
+                                                                  reader.result as string,
+                                                              }
+                                                            : pair
+                                                      ),
+                                                  }
+                                                : qd
+                                            )
+                                          );
+                                        };
+                                      } else {
+                                        console.log("Удаляем файл");
+                                      }
+                                    }}
+                                  ></input>
+                                  Загрузить изображение
+                                </label>
+                              </div>
+                            </>
+                          ))}
+                        </Form.Item>
                         <Button
                           type="primary"
                           className="mx-auto"
@@ -1234,63 +1285,80 @@ export const AddTestForm = (props: { type: SchoolType }) => {
                     </p>
                   </div>
                   <div className="flex flex-col gap-[16px]">
-                    {ratePhrases.map((rtp, i) => (
-                      <>
-                        <div className="flex items-center gap-[16px]">
-                          <Form.Item
-                            name={`ratePhrase${i}`}
-                            style={{ margin: 0 }}
-                            rules={[
-                              { required: true, message: "Не указан балл" },
-                              {
-                                pattern: /^\d+$/,
-                                message: "Некорректный ввод",
-                              },
-                            ]}
-                          >
+                    <Form.Item
+                      name={`ratePhrases`}
+                      style={{ margin: 0 }}
+                      rules={[
+                        () => ({
+                          validator() {
+                            if (ratePhrases.length !== 0) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(
+                              new Error("Должна быть хотя бы одна оценка")
+                            );
+                          },
+                        }),
+                      ]}
+                    >
+                      {ratePhrases.map((rtp, i) => (
+                        <>
+                          <div className="flex items-center gap-[16px]">
+                            <Form.Item
+                              name={`ratePhrase${i}`}
+                              style={{ margin: 0 }}
+                              rules={[
+                                { required: true, message: "Не указан балл" },
+                                {
+                                  pattern: /^\d+$/,
+                                  message: "Некорректный ввод",
+                                },
+                              ]}
+                            >
+                              <Input
+                                placeholder="Введите балл"
+                                value={rtp.points}
+                                onChange={(e) => {
+                                  setRatePhrases((prev) =>
+                                    prev.map((phr) =>
+                                      phr.id === rtp.id
+                                        ? {
+                                            ...phr,
+                                            points: parseInt(e.target.value),
+                                          }
+                                        : phr
+                                    )
+                                  );
+                                }}
+                              ></Input>
+                            </Form.Item>
                             <Input
-                              placeholder="Введите балл"
-                              value={rtp.points}
+                              placeholder="Введите оценку"
+                              value={rtp.message}
                               onChange={(e) => {
                                 setRatePhrases((prev) =>
                                   prev.map((phr) =>
                                     phr.id === rtp.id
-                                      ? {
-                                          ...phr,
-                                          points: parseInt(e.target.value),
-                                        }
+                                      ? { ...phr, message: e.target.value }
                                       : phr
                                   )
                                 );
                               }}
                             ></Input>
-                          </Form.Item>
-                          <Input
-                            placeholder="Введите оценку"
-                            value={rtp.message}
-                            onChange={(e) => {
-                              setRatePhrases((prev) =>
-                                prev.map((phr) =>
-                                  phr.id === rtp.id
-                                    ? { ...phr, message: e.target.value }
-                                    : phr
-                                )
-                              );
-                            }}
-                          ></Input>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setRatePhrases((prev) =>
-                                prev.filter((phr) => phr.id !== rtp.id)
-                              );
-                            }}
-                          >
-                            <DeleteIcon visible />
-                          </button>
-                        </div>
-                      </>
-                    ))}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setRatePhrases((prev) =>
+                                  prev.filter((phr) => phr.id !== rtp.id)
+                                );
+                              }}
+                            >
+                              <DeleteIcon visible />
+                            </button>
+                          </div>
+                        </>
+                      ))}
+                    </Form.Item>
                   </div>
                   <Button
                     className="mx-auto"

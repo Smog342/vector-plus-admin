@@ -60,24 +60,52 @@ export type AddEmployeeType = {
   workExperience: number;
 };
 
+type BaseAnswerType = {
+  images: { image: string }[];
+  text: string;
+  variantNumber: number;
+  points: number;
+};
+
+type BaseMatchType = {
+  firstImage: string;
+  firstText: string;
+  secondImage: string;
+  secondText: string;
+  points: number;
+};
+
 export type AddTestData = {
   title: string;
   description: string;
   targetAudience: string;
   organizationType: string;
-  questions: {
-    questionNumber: number;
-    questionType: "ONE_SELECT" | "MANY_SELECT" | "INPUT" | "MATCH";
-    description: string;
+  pointsRating: {
     points: number;
-    answerVariants:
-      | {
-          images: {
-            image: string;
-          }[];
-          text: string;
-        }[]
-      | null;
-    correctAnswers: string[];
+    message: string;
+  }[];
+  oneSelectAnswerQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    answerVariants: BaseAnswerType[];
+  }[];
+  manySelectAnswerQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    answerVariants: BaseAnswerType[];
+  }[];
+  inputQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    answerVariants: Omit<BaseAnswerType, "variantNumber" | "images">[];
+  }[];
+  matchQuestions: {
+    questionNumber: number;
+    text: string;
+    image: string;
+    pairs: BaseMatchType[];
   }[];
 };
